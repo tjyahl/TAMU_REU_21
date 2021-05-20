@@ -1,6 +1,7 @@
 Make a git account at github.com
 clone my repository (I'll invite you after you make an account)
 
+git@github.com:tjyahl/TAMU_REU_21.git
 
 
 When you're ready to work:
