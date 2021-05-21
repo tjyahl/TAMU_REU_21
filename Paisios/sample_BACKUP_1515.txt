@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-Testing
-=======
-Sample- Paisios
->>>>>>> 582981accbfc3f1950fe396680d152b08cbd4e16
