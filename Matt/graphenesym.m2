@@ -11,29 +11,106 @@
 
 
 clearAll
-needsPackage "NumericalAlgebraicGeometry"
 
 
-R = QQ[x_1,x_2,z,y_1,y_2,a,b,c] 
+--R = frac(QQ[a,b,c])[x_1,x_2,la,y_1,y_2] 
+R = QQ[x_1,x_2,la,y_1,y_2,a,b,c]
 --We have 3 variables defined x_1, x_2 , and z, the y_i will be the inverse
 ---of x_i
 --a,b,c are edge weights
 --To establish this inverse behavior we need to define a quotient ring
 I = ideal(x_1*y_1 - 1, x_2*y_2 - 1)
 
---Q = R/I
 
-operator = matrix{{(a+b+c-z)*x_1*x_2, (-a-b*x_1-c*x_2)*x_1*x_2},{-a*x_1*x_2-b*x_2-c*x_1, (a+b+c-z)*x_1*x_2}}
+--this is technically x_1x_2 * the operator as we do not want y_1 and y_2 present for differentiation
+operator = matrix{{(a+b+c-la)*x_1*x_2, (-a-b*x_1-c*x_2)*x_1*x_2},{-a*x_1*x_2-b*x_2-c*x_1, (a+b+c-la)*x_1*x_2}}
 
+coefficientRing(R)
 --build F, system of critical point equations    
 F = {};    
 F = append(F, sub(det(operator,Strategy => Cofactor),R));
 for i from 1 to 2 do (
-    tempI = ideal(x_i * F_0);
-    F = append(F, y_1*(diff(x_i, tempI_0) - F_0));
+    F = append(F,(diff(x_i, F_0)));
 );
 
+--we create an ideal J which gives our critical point equations with the condition x_1, x_2 \neq 0 by defining inverses via y_1 and y_2
 J = ideal (F) + I
 dim J
 degree J 
-`
+
+--we eliminate variables x_1 ... y_2 in order to be left with the values of lamdba where critical points occur
+H = eliminate(J,{x_1,x_2,y_1,y_2})
+
+factor H_0
+
+S = QQ[x_1,x_2,y_1,y_2,a,b,c]
+
+fermiMap = map(S,R,{x_1,x_2,a+b+c ,y_1,y_2,a,b,c})
+
+fF = fermiMap ideal F
+fI = fermiMap I
+fJ = fF + fI
+dim fJ 
+degree fJ
+
+--When we fix a value of lambda, we get the "fermi surface" at that value.
+--In the case lambda is a+b+c we are solving for when (a + b x_1 + c x_2) =0 and   (a + b y_1 + c y_2) =0
+--this is the intersection of a curve and a hyperbola
+
+
+--In the paper Frank and I are writing, we introduce Dense periodic graphs.
+--These are graphs with as many edges as possible, that is if F is a fundamental domain with an edge from F to wF
+--Then the subgraph given by the vertices of F and wF form a complete graph
+--See picture.
+
+--Taking a laplace Beltrami operator over a dense periodic graph we can count the critical points exactly
+
+--Example Here is laplace beltrami operator over a dense periodic graph with a fundamental domain of 2 vertices in Z^2
+clearAll
+load "functions.m2"
+--calling routine from some old code to get the matrix of the operator, this gives alot of other stuff as well
+-- but we won't care for now 
+
+
+denseData = AdjacentDensePeriodicMatrix(2,2)
+
+DF = {};    
+DF = append(DF, sub(det(denseData_0,Strategy => Cofactor),denseData_1));
+for i from 1 to 2 do (
+    DF = append(DF,(diff(x_i, DF_0)));
+);
+DJ = ideal (DF) + denseData_2
+-- dim DJ expect 9, output is 9
+--degree DJ big
+--we eliminate variables x_1 ... y_2 in order to be left with the values of lamdba where critical points occur
+--H = eliminate(DJ,{x_1,x_2,y_1,y_2})
+
+--factor H_0
+
+--All of these take way too long. Regardless not the point.
+
+--Lets take this dense graph and specialize some edges to zero
+
+--What we could have figured out is that there are 32 non-degenerate critical points counted to multiplicity
+
+
+specmap = map(denseData_1, denseData_1, {x_1,x_2,y_1,y_2,z,0,e_2,0,0,0,e_6,0,0,e_9})
+
+--lets redo our previous steps and look at the result
+SF = specmap DJ
+SI = specmap denseData_2
+SJ = SF + SI
+dim SJ 
+degree SJ
+SH = eliminate(SJ,{x_1,x_2,y_1,y_2,e_1,e_3,e_4,e_5,e_7,e_8})
+factor SH_0
+
+--This is the graphene. 
+--This brings us to the idea for the project.
+
+--Every periodic graph can be embedded in a dense periodic graph.
+
+--As we specialize edges to 0, this is the same as removing them from our graph
+
+--along some route of edge removal our dense periodic graph became the graphene and shed 20 solutions
+--We are interested in detailing this process and understanding why, where, and when solutions vanish.
