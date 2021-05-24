@@ -30,7 +30,7 @@ coefficientRing(R)
 F = {};    
 F = append(F, sub(det(operator,Strategy => Cofactor),R));
 for i from 1 to 2 do (
-    F = append(F,(diff(x_i, F_0)));
+    F = append(F,(diff(x_i, F_0))); --adding the partial derivatives with respect to x_i to F
 );
 
 --we create an ideal J which gives our critical point equations with the condition x_1, x_2 \neq 0 by defining inverses via y_1 and y_2
@@ -55,48 +55,47 @@ degree fJ
 
 --When we fix a value of lambda, we get the "fermi surface" at that value.
 --In the case lambda is a+b+c we are solving for when (a + b x_1 + c x_2) =0 and   (a + b y_1 + c y_2) =0
---this is the intersection of a curve and a hyperbola
+--this is the intersection of a curve and a hyperbola as in the png
+--See the blochvariety623 png to see F_0 in S_1 \times S_1 \times \RR where S_1 is the complex unit circle
 
 
 --In the paper Frank and I are writing, we introduce Dense periodic graphs.
---These are graphs with as many edges as possible, that is if F is a fundamental domain with an edge from F to wF
+--These are periodic graphs with as many edges as possible, that is if F is a fundamental domain with an edge from F to wF
 --Then the subgraph given by the vertices of F and wF form a complete graph
---See picture.
+--See pictures.
 
 --Taking a laplace Beltrami operator over a dense periodic graph we can count the critical points exactly
 
 --Example Here is laplace beltrami operator over a dense periodic graph with a fundamental domain of 2 vertices in Z^2
 clearAll
 load "functions.m2"
---calling routine from some old code to get the matrix of the operator, this gives alot of other stuff as well
--- but we won't care for now 
+--calling routine from some old code
 
+denseData = AdjacentDensePeriodicMatrix(2,2) --this gives us a tuple, the operator, the ring it is in, and the ideal setting x_iy_i=1
+--2,2 is giving us the laplace beltrami operator over the periodic graph shown in Dense22periodicgraph.png
 
-denseData = AdjacentDensePeriodicMatrix(2,2)
-
+D_0 -- the matrix representing a general laplace beltrami operator over the graph
 DF = {};    
 DF = append(DF, sub(det(denseData_0,Strategy => Cofactor),denseData_1));
 for i from 1 to 2 do (
     DF = append(DF,(diff(x_i, DF_0)));
 );
 DJ = ideal (DF) + denseData_2
--- dim DJ expect 9, output is 9
---degree DJ big
+--dim DJ expect 9, output takes too long
+--degree DJ -- output takes too long
 --we eliminate variables x_1 ... y_2 in order to be left with the values of lamdba where critical points occur
---H = eliminate(DJ,{x_1,x_2,y_1,y_2})
-
+--H = eliminate(DJ,{x_1,x_2,y_1,y_2}) --not even going to try
 --factor H_0
 
---All of these take way too long. Regardless not the point.
+
+--Just remark that we know there are 32 critical points counted to multiplicity
 
 --Lets take this dense graph and specialize some edges to zero
-
---What we could have figured out is that there are 32 non-degenerate critical points counted to multiplicity
 
 
 specmap = map(denseData_1, denseData_1, {x_1,x_2,y_1,y_2,z,0,e_2,0,0,0,e_6,0,0,e_9})
 
---lets redo our previous steps and look at the result
+--lets apply the same steps we took before for graphene and look at the result
 SF = specmap DJ
 SI = specmap denseData_2
 SJ = SF + SI
@@ -112,5 +111,27 @@ factor SH_0
 
 --As we specialize edges to 0, this is the same as removing them from our graph
 
---along some route of edge removal our dense periodic graph became the graphene and shed 20 solutions
---We are interested in detailing this process and understanding why, where, and when solutions vanish.
+--as we removed edges our dense periodic graph became the graphene, ``losing'' 20 critical points.
+--We are interested in detailing this process and understanding what, why, and when solutions vanish.
+
+
+
+--Why do we care? Spectral edge conjecture. 
+-- Look at the bloch variety 623 png. 
+--Notice the bloch vairety of graphene is composed of two sheets,
+--The highlighted region on the lambda axis is the projection of the bloch variety onto it
+--Each of these red segments is called a spectral band. The end points are called spectral edges. 
+
+--The conjecture states that: Extrema are isolated, Extrema are non-degenerate, each extremal value occurs in a single band.
+
+--To be precise we are referring to edges. In the example the two sheets of the bloch variety did not over lap, so there 
+--were 4 edges (end points of the projection of the sheets on to the lambda axis), two for each sheet.
+--The extrema in the conjecture refer to the edges, not extrema of a single sheet.
+--For example we have only 2 edges in blochvariety111.png and a single band. Thus although there are degenerate critical points.
+--these are part of the same spectral band.
+
+--Since extrema are critical points, understanding the structure of the critical points is a first step
+--towards this conjecture.
+
+--For discrete periodic operators this does not hold in general in higher dimension (>2D), but 
+--it is of interest for what operators and what graphs it does and does not hold.
