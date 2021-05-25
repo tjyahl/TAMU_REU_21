@@ -73,8 +73,10 @@ degree fJ
 --This can be rewritten as F0 =  (2ab+2ac+2bc) - ab(x_1 + y_1) - ac(x_2 + y_2) - bc(x_1y_2 + x_2y_1), F1 = ab(x_1-y_1) + bc(x_1y_2 - x_2 y_1), F2 = ac(x_2-y_2) + bc(-x_1y_2 + x_2 y_1)
 -- Clearly x_i = 1 for each i gives a critical point
 
---F1 = F2 = 0 gives us ab(x_1-y_1) = -ac(x_2-y_2) = .bc(-x_1y_2 + x_2 y_1), we may scale by x_1x_2 to get three hyperbola, there are only solutions where all three intersect.
---At most any 2 hyperbolas can have 4 points of intersection. In this case we have x_1,x_2 = (\pm 1, \pm 1) are the four solutions.
+--F1 = F2 = 0 gives us ab(x_1-y_1) = -ac(x_2-y_2) = bc(-x_1y_2 + x_2 y_1), we may scale by x_1x_2 
+-- We then can set ab(x_1-y_1) = ac(x_2-y_2) to get a circle, and ab(x_1-y_1) = bc(-x_1y_2 + x_2 y_1)  and ac(x_2-y_2) = bc(-x_1y_2 + x_2 y_1)  to get two hyperbolas.
+--there are only solutions where all three intersect.
+--At most any 2 hyperbolas can have 4 points of intersection, similarly a circle and hyperbola can only intersect 4 times at most. In this case we have x_1,x_2 = (\pm 1, \pm 1) are the four solutions.
 
 --We finally then have that of these four solutions only one satisfies  (2ab+2ac+2bc) - ab(x_1 + y_1) - ac(x_2 + y_2) - bc(x_1y_2 + x_2y_1) and so we have only one critical point at \lambda = 0 given by x_1 = x_2 = 1
 --See graphene623fermi0.png 
