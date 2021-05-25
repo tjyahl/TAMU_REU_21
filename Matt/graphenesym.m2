@@ -1,6 +1,6 @@
 --See graphene picture for labeling to see what is going on
 --Here we look at a laplace-beltrami opertor over the graphene
---Laplace-beltrami operator assigns edges weights
+--Dsicrete Laplace-beltrami operator takes potential differences scaled by edge weights
 --In periodic graph, after a floquet transform, this operators are 
 --determined fully by the vertices of a chosen fundamental domain, u and v in the image
 
@@ -35,13 +35,13 @@ for i from 1 to 2 do (
 
 --we create an ideal J which gives our critical point equations with the condition x_1, x_2 \neq 0 by defining inverses via y_1 and y_2
 J = ideal (F) + I
-dim J
+dim J -- dimension is 3 since we have the free edge weight parameter variables
 degree J 
 
 --we eliminate variables x_1 ... y_2 in order to be left with the values of lamdba where critical points occur
 H = eliminate(J,{x_1,x_2,y_1,y_2})
 
-factor H_0
+factor H_0 --when this is zero there exists a critical point...this gives us the eigen values of lambda where critical points exist
 
 S = QQ[x_1,x_2,y_1,y_2,a,b,c]
 
@@ -54,9 +54,32 @@ dim fJ
 degree fJ
 
 --When we fix a value of lambda, we get the "fermi surface" at that value.
---In the case lambda is a+b+c we are solving for when (a + b x_1 + c x_2) =0 and   (a + b y_1 + c y_2) =0
---this is the intersection of a curve and a hyperbola as in the png
+--In this case lambda is a+b+c we are solving for when both (a + b x_1 + c x_2) =0 and (a + b y_1 + c y_2) =0
+--this is the intersection of a curve and a hyperbola as in the graphene623fermi png
 --See the blochvariety623 png to see F_0 in S_1 \times S_1 \times \RR where S_1 is the complex unit circle
+
+
+--Lets try another. For all laplace beltrami operators, when lambda = 0 there exists a solution at x_i = 1
+
+fermiMap = map(S,R,{x_1,x_2,0,y_1,y_2,a,b,c})
+
+fF = fermiMap ideal F
+fI = fermiMap I
+fJ = fF + fI
+dim fJ 
+degree fJ
+
+--In this case we have solutions (a+b+c)^2 - (a + b x_1 + c x_2)*(a + b y_1 + c y_2)=0
+--This can be rewritten as F0 =  (2ab+2ac+2bc) - ab(x_1 + y_1) - ac(x_2 + y_2) - bc(x_1y_2 + x_2y_1), F1 = ab(x_1-y_1) + bc(x_1y_2 - x_2 y_1), F2 = ac(x_2-y_2) + bc(-x_1y_2 + x_2 y_1)
+-- Clearly x_i = 1 for each i gives a critical point
+
+--F1 = F2 = 0 gives us ab(x_1-y_1) = -ac(x_2-y_2) = .bc(-x_1y_2 + x_2 y_1), we may scale by x_1x_2 to get three hyperbola, there are only solutions where all three intersect.
+--At most any 2 hyperbolas can have 4 points of intersection. In this case we have x_1,x_2 = (\pm 1, \pm 1) are the four solutions.
+
+--We finally then have that of these four solutions only one satisfies  (2ab+2ac+2bc) - ab(x_1 + y_1) - ac(x_2 + y_2) - bc(x_1y_2 + x_2y_1) and so we have only one critical point at \lambda = 0 given by x_1 = x_2 = 1
+--See graphene623fermi0.png 
+
+
 
 
 --In the paper Frank and I are writing, we introduce Dense periodic graphs.
