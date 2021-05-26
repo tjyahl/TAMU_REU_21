@@ -49,7 +49,8 @@ export{
     --options
     "baseElements",
     "verbosity",
-    "coeffRing"
+    "coeffRing",
+    "Solver"
     }
 
 
@@ -75,8 +76,8 @@ monodromy (List,List,List) := Monodromy => o->(F,basePt,baseSolns)->(
     )
 
 
-sparseMonodromy = method()
-sparseMonodromy (List) := Monodromy => Abullet->(
+sparseMonodromy = method(Options=>{Solver=>PHCPACK})
+sparseMonodromy (List) := Monodromy => o->Abullet->(
     n := #Abullet;
     
     x := symbol x;
@@ -94,7 +95,7 @@ sparseMonodromy (List) := Monodromy => Abullet->(
     
     F := Ffamily/phi;
     
-    solns := solveDecomposableSystem F;
+    solns := solveDecomposableSystem(F,Software=>o.Solver);
     
     M := monodromy(rewriteEqns(Ffamily),coeffs,solns);
     M
