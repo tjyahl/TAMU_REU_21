@@ -794,8 +794,15 @@ AdjacentDensePeriodicMatrix(ZZ,ZZ) := (Sequence) => (m,n)-> (
 --     stdio << theideals;
 --     stdio << dims;
 --     stdio << degs;
-     
-     return (outMatrix,R,I)
+local DF;
+local Ra;
+    DF = {};    
+    DF = append(DF, sub(det(outMatrix,Strategy => Cofactor),R));
+    for i from 1 to 2 do (
+    DF = append(DF,(diff(x_i, DF_0)));
+    );
+     Ra = QQ[x_1 .. x_m, y_1 .. y_m,z];
+     return (outMatrix,R,I,Ra,DF)
      )
  
 
