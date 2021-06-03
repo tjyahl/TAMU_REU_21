@@ -43,6 +43,7 @@ export{
     "saveMonodromy",
     "loadMonodromy",
     "printCycleTally",
+    "printCycleTypes",
     "printForGAP",
     "testAlternatingMonodromy",
     "testImprimitiveMonodromy",
@@ -339,6 +340,26 @@ numCycles (List) := ZZ => P->(
     )
 
 
+cycleType = method()
+cycleType (List) := ZZ => P->(
+    if not (P === unique P and all(P,n->member(n,toList(1 .. #P)))) then error "--cycleType: not permutation";
+    cType := {};
+    L := toList(1 .. #P);
+    while (#L>0) do (
+	len := 1;
+	i := first L;
+	while (P#(i-1) != first L) do (
+	    L = delete(P#(i-1),L);
+            i = P#(i-1);
+	    len = len + 1
+	    );
+	L = drop(L,1);
+	cType = append(cType,len)
+	);
+    sort cType
+    )
+
+
 --------------------------------------
 ------------ Main Methods ------------
 --------------------------------------
@@ -347,6 +368,13 @@ printCycleTally = method()
 printCycleTally (Monodromy) := Nothing => M->(
     T := M#group;
     scan(select(keys T,k->class k === List),sigma-> print(printPermutation(sigma) | ": " | toString(T#sigma)))
+    )
+
+
+printCycleTypes = method()
+printCycleTypes (Monodromy) := Nothing => M->(
+    T := elements M#group;
+    tally apply(T,cycleType)
     )
 
 
