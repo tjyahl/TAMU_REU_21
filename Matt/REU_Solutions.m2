@@ -236,7 +236,7 @@ inverseideal = ideal(x_1*y_1 -1, x_2*y_2-1,x_3*y_3 -1)
 
 load "functions.m2"
 R = QQ[x_1,x_2,x_3,z]
-k4charpoly = matrix{{3*x_1*x_2*x_3,-x_1*x_2*x_3,-x_1*x_2*x_3,-x_1*x_2*x_3},{-x_1*x_2*x_3,3*x_1*x_2*x_3,-x_1*x_2*x_3*x_1,-x_1*x_2*x_3*x_2},{-x_1*x_2*x_3,-x_2*x_3, 3*x_1*x_2*x_3, -x_1*x_2},{-x_1*x_2*x_3,-x_1*x_3,-x_1*x_2*x_3*x_3 ,3*x_1*x_2*x_3}}    
+k4charpoly = matrix{{3*x_1*x_2*x_3-z,-x_1*x_2*x_3,-x_1*x_2*x_3,-x_1*x_2*x_3},{-x_1*x_2*x_3,3*x_1*x_2*x_3-z,-x_1*x_2*x_3*x_1,-x_1*x_2*x_3*x_2},{-x_1*x_2*x_3,-x_2*x_3, 3*x_1*x_2*x_3-z, -x_1*x_2},{-x_1*x_2*x_3,-x_1*x_3,-x_1*x_2*x_3*x_3 ,3*x_1*x_2*x_3-z}}    
 F = sub(det(k4charpoly,Strategy => Cofactor),R); --get char polynomial
 FsN = convexHull (transpose matrix ( exponents(F)));
 4*3*2*volume FsN --normalized volume
