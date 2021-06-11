@@ -60,7 +60,7 @@ trackedSolns
 --luckily, smart people make packages that does the above for us.
 ----this loads the package.
 restart
-loadPackage("Monodromy")
+loadPackage("Monodromy",FileName=>"../Monodromy.m2")
 
 --recall we represent sparse systems by supports, points in the plane determining exponents.
 ----here the supports for each equation are written as a matrix.

@@ -10,7 +10,7 @@
 ----
 ----c) Show that the Galois group corresponding to these supports is the symmetric group S_3.
 restart
-loadPackage("Monodromy")
+loadPackage("Monodromy",FileName=>"../code/Monodromy.m2")
 R = CC[x,y]
 F = {1+2*x+3*y+5*x*y+7*y^2, 1-3*x+7*y-13*x*y}
 
@@ -52,7 +52,7 @@ printCycleTally N
 --Consider the polynomial 'F'. Show there are 3 solutions and the Galois group corresponding
 ----to the supports is S_3.
 restart
-loadPackage("Monodromy")
+loadPackage("Monodromy",FileName=>"../code/Monodromy.m2")
 R = CC[x]
 F = {1+3*x+5*x^2+7*x^3}
 
@@ -75,7 +75,7 @@ F = {1+3*x+5*x^2+7*x^3}
 ------The blocks correspond to the solutions of 'F' (giving 3 blocks) and the elements of the blocks 
 ------correspond to the 2 solutions of the second polynomial after substituting a solution from the first.
 restart
-loadPackage("Monodromy")
+loadPackage("Monodromy",FileName=>"../code/Monodromy.m2")
 R = CC[x,y]
 F = {1+3*x+5*x^2+7*x^3, 2-5*x*y+4*y^2}
 

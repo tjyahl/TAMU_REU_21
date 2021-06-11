@@ -18,6 +18,7 @@ export{
     "symmetricGroup",
     "alternatingGroup",
     "wreathProduct",
+    "groupIntersection",
     "symmetricEmbedding",
     "actionOnCosets",
     --
@@ -30,7 +31,7 @@ export{
     "imprimitive",
     --
     "orbit",
-    "listCosets",
+    "cosetOrbit",
     "orbitPartition",
     "stabilizer",
     "computeBSGS",
@@ -43,7 +44,6 @@ export{
     "baseSet",
     "representative",
     "baseGroup",
-    "ComputeTransversal",
     "BSGS"
     }
 
@@ -125,7 +125,7 @@ symmetricGroup (ZZ) := Group => n->(
     if (n>1) then (
 	sigma := hashTable({1=>2,2=>1}|apply(toList(3..n),i->i=>i));
         tau := hashTable(apply(n-1,i->i+1=>i+2)|{n=>1});
-	group({sigma,tau})
+	group(unique {sigma,tau})
 	) else (
 	group({hashTable {1=>1}})
 	)
@@ -142,9 +142,7 @@ alternatingGroup (Group) := Group => G->(
     if alternatingSubgroup(G) then return G;
     X := elements G#baseSet;
     n := #X;
-    if (n == 1) then return(G);
-    L := {1,0}|toList(2..n-1);
-    sigma := first select(G#genSet,g->(n - numCycles g) != 0);
+    sigma := first select(G#genSet,g->(n - numCycles g)%2 != 0);
     A := group unique flatten apply(G#genSet,g->(
 	    if ((n - numCycles g) % 2 == 0) then (
 		{g,sigma*g*sigma}
@@ -158,7 +156,7 @@ alternatingGroup (Group) := Group => G->(
 
 
 Group==Group := Boolean => (G,H)->(
-    all(G#genSet,g->member(g,H)) and all(H#genSet,h->member(h,G))
+    subgroup(G,H) and subgroup(H,G)
     )
 
 Coset==Coset := Boolean => (aH,bH)->(
@@ -174,7 +172,7 @@ Group*Group := Group => (G,H)->(
     prodBase := elements(X**Y);
     GxId := apply(G#genSet,g->combine(g,identityElement(H),splice,splice,first));
     IdxH := apply(H#genSet,h->combine(identityElement(G),h,splice,splice,first));
-    GxH := group(GxId|IdxH);
+    GxH := group(unique(GxId|IdxH));
     GxH
     )
 
@@ -190,12 +188,34 @@ Group^ZZ := Group => (G,n)->(
 
 wreathProduct = method()
 wreathProduct (Group,Group) := Group => (G,H)->(
-
+    X := G#baseSet;
+    Y := H#baseSet;
+    prodBase := elements(X**Y);
+    blockPerms := apply(H#genSet,h->combine(identityElement(G),h,identity,identity,first));
+    elemPerms := flatten apply(elements Y,i->apply(G#genSet,g->hashTable apply(prodBase,p->p=>(
+		    if (last p == i) then (
+			(g#(first p),i)
+			) else (
+			p
+			)
+		    )
+		)
+	    )
+	);
+    XwrY := group(unique(blockPerms|elemPerms));
+    XwrY
     )
 
 
-intersection (Group,Group) := Group => (G,H)->(
-    
+groupIntersection = method()
+groupIntersection (Group,Group) := Group => (G,H)->(
+    C := cosetOrbit(coset(identityElement(H),H),G);
+    GcapH := unique flatten table(C,G#genSet,(aH,g)->(
+	    gaH := first select(C,bH->bH==g*aH);
+	    (inverse (gaH#representative))*g*(aH#representative)
+	    )
+	);
+    group(GcapH)
     )
 
 
@@ -244,15 +264,17 @@ printCycles (HashTable) := String => g->(
     cycles := {};
     while (#X>0) do (
         i := first X;
+	singleton := true;
         s := "(" | toString(i);
         while (g#i != first X) do (
             X = delete(g#i,X);
             i = g#i;
             s = s | "," | toString(i);
+	    singleton = false
             );
         X = drop(X,1);
         s = s | ")";
-        if (#separate(",",s)>1) then (
+        if not singleton then (
 	    cycles = append(cycles,s)
 	    )
         );
@@ -368,10 +390,10 @@ orbit (Thing,Group) := Sequence => (k,G)->(
     )
 
 
-listCosets = method()
-listCosets (Group,Group) := List => (H,G)->(
-    X := G#baseSet;
-    C := {coset(identityElement(G),H)};
+cosetOrbit = method()
+cosetOrbit (Coset,Group) := List => (eH,G)->(
+    if not (G#baseSet === (eH#baseGroup)#baseSet) then error "--cosetOrbit: expected groups acting on the same set";
+    C := {eH};
     L := C;
     while (#L>0) do (
 	bH := first L;

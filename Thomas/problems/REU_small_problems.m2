@@ -59,7 +59,7 @@ solveSystem F
 ----You might try to see if you can determine which sets of numbers
 ----form the blocks of the wreath product.
 ----(remember in (S_2 wr S_2) there are 2 blocks of size 2)
-loadPackage("Monodromy",Reload=>true)
+loadPackage("Monodromy",FileName=>"../code/Monodromy.m2",Reload=>true)
 M = sparseMonodromy(A,Solver=>M2)
 M#family
 monodromyLoop(M,10)
