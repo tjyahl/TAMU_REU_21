@@ -1,0 +1,9 @@
+--Package for studying properties of groups.
+
+newPackage(
+    "Groups",
+    Version=>"0.0.1",
+    Headline=>"Methods for studying properties of groups",
+    Authors=>{{"Thomas Yahl"}},
+    DebuggingMode=>true
+    )

@@ -8,7 +8,7 @@
 -- March 22, 2021
 --
 -- To do: 
---    add checks to sparse/Fano input
+--    add checks for EVERYTHING.
 --    port monodromy elements to GAP
 --    test for imprimitivity
 --    certification?
@@ -30,7 +30,7 @@ newPackage(
 
 export{
     --methods
-    "mondromy",
+    "monodromy",
     "family",
     "basePoint",
     "params",
@@ -40,12 +40,14 @@ export{
     "FanoMonodromy",
     "monodromyLoop",
     "changeBasePoint",
+    "fibrePower",
     "saveMonodromy",
     "loadMonodromy",
     "printCycleTally",
     "printCycleTypes",
     "printForGAP",
     "testAlternatingMonodromy",
+    "testTransitiveMonodromy",
     "testImprimitiveMonodromy",
     --options
     "baseElements",
@@ -222,6 +224,27 @@ changeBasePoint (Monodromy,List) := Monodromy => (M,bp)->(
     )
 
 
+fibrePower = method()
+fibrePower (Monodromy,ZZ) := Monodromy => (M,k)->(
+    F := M#family;
+    R := ring first F;
+    n := numgens R;
+    
+    S := newRing(R,Variables=>k*n);
+    newF := flatten apply(k,i->(
+	    phi := map(S,R,(gens S)_(toList(n*i..(n*(i+1)-1))));
+	    F/phi
+	    )
+	);
+    
+    basePt := M#basePoint;
+    baseSolns := flatten apply(subsets(M#baseSolutions,k),s->(permutations s)/flatten);
+    
+    fibPow := monodromy(newF,basePt,baseSolns);
+    fibPow
+    )
+
+
 saveMonodromy = method()
 saveMonodromy (Monodromy,String) := Nothing => (M,s)->(
     F := M#family;
@@ -360,6 +383,38 @@ cycleType (List) := ZZ => P->(
     )
 
 
+groupMembership = method()
+groupMembership (List,List) := Boolean => (P,G)->(
+    
+    )
+
+
+pruneGens = method()
+pruneGens (List) := List => G->(
+    
+    )
+
+
+orbit = method()
+orbit (ZZ,List) := List => (n,L)->(
+    
+    )
+
+
+stabilizer = method()
+stabilizer (ZZ,List) := List => (n,L)->(
+    
+    )
+
+
+groupOrder = method()
+groupOrder (List) := ZZ => G->(
+    n := #(first G);
+    i := min apply(1..n,i->G#0#(i-1) != i);
+    
+    )
+
+
 --------------------------------------
 ------------ Main Methods ------------
 --------------------------------------
@@ -402,10 +457,34 @@ testAlternatingMonodromy (Monodromy) := Boolean => M->(
     )
 
 
+testTransitiveMonodromy = method()
+testTransitiveMonodromy (Monodromy) := Boolean => M->(
+    n := #(M#baseSolutions);
+    #(unique apply(keys M#group,first)) == n
+    )
+
+testTransitiveMonodromy (Monodromy,ZZ) := Boolean => (M,k)->(
+    n := #(M#baseSolutions);
+    #(unique apply(keys M#group,P->P_(toList(0..k-1)))) == binomial(n,k)*k!
+    )
+
+
 testImprimitiveMonodromy = method()
 testImprimitiveMonodromy (Monodromy) := Boolean => M->(
     
     )
+
+
+monodromyOrder = method()
+monodromyOrder (Monodromy) := ZZ => M->(
+    G := keys M#group;
+    groupOrder G
+    )
+
+
+
+
+
 
 
 
