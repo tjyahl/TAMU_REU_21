@@ -1,0 +1,22 @@
+First few section of DiscretePeriodicOps.pdf
+graphene Example / topolgoical crystal intro (same file)
+Franks slides
+My slides
+DoKuchSott feel free to skim
+Franks grant proposal section
+
+Some topological crystal resources: (these maybe too advanced)
+https://johncarlosbaez.wordpress.com/2016/07/22/topological-crystals-part-1/
+https://math.ucr.edu/home/baez/crystal.pdf
+https://arxiv.org/pdf/2002.09562.pdf
+On The K4 crystal Sunada Slides
+
+This might be good to look at for the graph theory intro as this was written 
+for both non math people and math people:
+Sunada Topolgical Crystallography: https://libgen.is/book/index.php?md5=CE4E2D17E2FD1CCAAF2C8803BBAFA992
+
+Periodic operators:
+https://arxiv.org/pdf/1510.00971.pdf
+Introduction to Quantum Graphs https://libgen.is/book/index.php?md5=4684163BAC1CFD56B5316CAA4C049890
+- from this read the first few pages (1-3) and chapter 4. 
+IntrotoPeriodicOperators Kuch slides
