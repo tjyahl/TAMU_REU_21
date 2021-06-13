@@ -36,23 +36,23 @@
 --hint: add another vertex to the 2,2 dense periodic graph fundamental domain, leave actions the same.
 load "functions.m2"
 M=AdjacentDensePeriodicMatrix(2,3)
-F=M_0 - matrix{{z,0,0},{0,z,0},{0,0,z}} --produce the matrix and subtract z from the diagonal
-f= det F -- get the determinant
+M_0
+M_1
+F=M_0 - matrix{{z*x_1*x_2,0,0},{0,z*x_1*x_2,0},{0,0,z*x_1*x_2}} --produce the matrix and subtract z from the diagonal
+f= det F; -- get the determinant
 --for i from 1 to 21 do f = sub(f,e_i=>random(ZZ))
 --f
-L = exponents f
+M
+L = exponents f;
 p = length L - 1
-L = new MutableList from L
-for i from 0 to p do L#i = {L#i_0,L#i_1,L#i_2,L#i_3,L#i_4}
-L = new List from L
-length L
---length unique L
---for i from 0 to length L - 1 if L_i_2 != 0 print i
+L 
 l = new List
 for i from 0 to p do l = append(l,{L_i_0-L_i_2,L_i_1-L_i_3,L_i_4})
 l
-l = unique l
+l = unique l;
 length l
+volume convexHull transpose matrix l
+-- by hand these points give 18 but this gives 27
 --Problem: What does the newton polytope of the laplace beltrami operator look like? What is its volume?
 
 -- Bonus Problem: Can you come up with a general volume for the newton polytope of the operator given by AdjacentDensePeriodicMatrix(2,n)? 
@@ -80,11 +80,21 @@ length l
 
 --Hint: You may want to use software to guess a closed form
 
-
-
-
-
-
+--Problem 4 code:
+load("functions.m2")
+R = QQ[x_1,x_2,y_1,y_2,a,b,c,d,e,f,z]
+I = ideal(x_1*y_1 - 1,x_2*y_2 - 1)
+operator = matrix{{e+f+a-z,-e*y_2-f*y_1-a,0},{-a-f*x_1-e*x_2,a+b+e+c+d+f-z,-b-d*y_2+c*y_1},{0,-b-c*x_1-d*x_2,b+c+d-z}}
+g = det operator
+h = exponents g
+l = new List
+for i from 0 to length h - 1 do l = append(l,{h_i_0-h_i_2,h_i_1-h_i_3,h_i_10})
+length l
+l = unique l
+length l
+volume convexHull transpose matrix l
+-- this calculation gives 14/3 when it should give 5 (reason is that a single point is missing from the 
+-- supports but I am not sure why it is missing)
 --If you want more:
 
 
@@ -101,9 +111,11 @@ length l
 --Hint: How does the Newton polytope of the dice crystal relate to that of the graphene?
 --Problem: What might the volume of the nth memeber of the larger family mentioned above be?
 
+-- the vloume of the newton polytope for the dice lattice is 5
 
-
-
+-- I am not sure what the volume of the nth member of the graphene-dice family should have. It is hard
+-- to make any conclusions with only two data points. Although, it may be the sum of 2 to n.
+-- graphene is 2 and the dice lattice is 2 + 3.
 
 
 
@@ -114,17 +126,31 @@ length l
 --Next time we meet I will try to have written some code to generate what the fundamental domain looks like
 -- (its in 3d space with 4 vertices)
 --you might want to eliminate the y_i variables, see how I did this in graphenesym.m2
-
+load("functions.m2")
+k4cry = AdjacentDensePeriodicMatrix(3,2)
 R = QQ[x_1,x_2,x_3,y_1,y_2,y_3,z,e_1,e_2,e_3,e_4,e_5,e_6]
-k4cry = matrix{{e_1+e_2+e_3,-e_1,-e_2,-e_3},{-e_1,e_1+e_4+e_5,-e_4*x_1,-e_5*x_2},{-e_2,-e_4*y_1, e_2+e_4+e_6, -e_6*y_3},{-e_3,-e_5*y_2,-e_6*x_3 ,e_3+e_4+e_6}}
+k4cry = matrix{{e_1+e_2+e_3,-e_1,-e_2,-e_3},{-e_1,e_1+e_4+e_5,-e_4*x_1,-e_5*x_2},{-e_2,-e_4*y_1, e_2+e_4+e_6, -e_6*y_3},{-e_3,-e_5*y_2,-e_6*x_3 ,e_3+e_5+e_6}}
 --do not forget we are looking at characteristic polynomials, so you will want to subtract I*z from k4cry
 --Also do not forget to set x_i and y_i as inverses
 inverseideal = ideal(x_1*y_1 -1, x_2*y_2-1,x_3*y_3 -1)
-
+--M = k4cry*x_1*x_2*x_3
 --Calculate the volume of the newton polytope of the characteristic polynomial:
 -- First specialize the edges to some nonzero values and then take the newton polytope of this and get the volume
 -- This polytope is 4 dimensional, so you will definitely want to use software for this
 
+M = k4cry - matrix{{z,0,0,0},{0,z,0,0},{0,0,z,0},{0,0,0,z}}
+f = det M
+--sub(f,z=>0)
+--for i from 1 to 6 do f = sub(f,e_i=>random(ZZ))
+E = exponents f
+L =  new List
+length E
+for i from 0 to length E - 1 do L = append(L,{E_i_0-E_i_3,E_i_1-E_i_4,E_i_2-E_i_5,E_i_6})
+L = unique L
+K = transpose matrix L
+CH = convexHull K
+volume CH -- outputs 6 for e_i = 1 and 16/3, 5, or 6 for random edge weights. Matt has 4 as answer.
+-- interesting to note the ratio of this to the given answer is the same as in problem 2 (27 but should be 18)
 --only way to visualize this would be to look at the 3 dimensional base of the polytope,
 -- that is the newton polytope of the characteristic polynomial (when z= 0)
 
