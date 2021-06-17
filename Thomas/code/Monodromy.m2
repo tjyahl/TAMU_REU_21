@@ -9,8 +9,6 @@
 --
 -- To do: 
 --    add checks for EVERYTHING.
---    port monodromy elements to GAP
---    test for imprimitivity
 --    certification?
 --
 
@@ -33,7 +31,6 @@ export{
     "monodromy",
     "family",
     "basePoint",
-    "params",
     "baseSolutions",
     "group",
     "sparseMonodromy",
@@ -90,6 +87,10 @@ sparseMonodromy (List) := Monodromy => o->Abullet->(
     parms := splice apply(n,i->a_(i,0)..a_(i,numcols(Abullet#i)-1));
     R := CC[parms][x_0..x_(n-1)];
     
+    Abullet = apply(Abullet,A->(
+	    v := transpose matrix toList(numcols(A):apply(entries A,l->min l));
+	    A - v
+	    ));
     Ffamily := apply(n,k->sum(numcols(Abullet#k),j->a_(k,j)*product(n,i->x_i^((Abullet#k)_(i,j)))));
     
     S := CC[t_1..t_n];
@@ -132,10 +133,10 @@ FanoMonodromy (ZZ,ZZ,Sequence) := Monodromy => (k,m,n)->(
     coeffs := (flatten apply(subsEqns,f->flatten entries last coefficients f))/(c->sub(c,R));
     coeffs = rewriteEqns(coeffs);
     
-    --MONODROMY SOLVER NOT WORKING RN :(
     (basePt,baseSolns) := solveFamily(polySystem coeffs);
     basePt = coordinates basePt;
-    baseSolns = baseSolns/coordinates;
+    numSolns := length(baseSolns);
+    baseSolns = apply(numSolns,i->coordinates baseSolns#i);
     
     M := monodromy(coeffs,basePt,baseSolns);
     M
@@ -383,37 +384,6 @@ cycleType (List) := ZZ => P->(
     )
 
 
-groupMembership = method()
-groupMembership (List,List) := Boolean => (P,G)->(
-    
-    )
-
-
-pruneGens = method()
-pruneGens (List) := List => G->(
-    
-    )
-
-
-orbit = method()
-orbit (ZZ,List) := List => (n,L)->(
-    
-    )
-
-
-stabilizer = method()
-stabilizer (ZZ,List) := List => (n,L)->(
-    
-    )
-
-
-groupOrder = method()
-groupOrder (List) := ZZ => G->(
-    n := #(first G);
-    i := min apply(1..n,i->G#0#(i-1) != i);
-    
-    )
-
 
 --------------------------------------
 ------------ Main Methods ------------
@@ -477,8 +447,7 @@ testImprimitiveMonodromy (Monodromy) := Boolean => M->(
 
 monodromyOrder = method()
 monodromyOrder (Monodromy) := ZZ => M->(
-    G := keys M#group;
-    groupOrder G
+
     )
 
 
