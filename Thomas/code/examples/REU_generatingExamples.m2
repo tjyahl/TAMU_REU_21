@@ -56,6 +56,7 @@ A = {matrix{{0,0,1,1},{0,1,0,1}},matrix{{0,0,1,1},{0,1,0,1}}}
 d = #sols
 
 --2) Find a matrix 'T' with |det(T)|>1. Multiply each support matrix in 'A' on the left by 'T'.
+------(Note: You can let 'T' be a diagonal matrix and still make all lacunary systems.)
 ------
 ------(Note: the new polynomials will be in the variables corresponding to the columns of 'T'.
 ------in this example, the new polynomials are really polynomials in x^3 and x*y.)
