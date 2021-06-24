@@ -34,11 +34,11 @@
 --AdjacentDensePeriodicMatrix(2,3); -- this a graph as before but now with 3 vertices in the fundamental domain and 2 actions
 --Problem: Can you draw the periodic graph this is an operator over? 
 --hint: add another vertex to the 2,2 dense periodic graph fundamental domain, leave actions the same.
-load "functions.m2"
+load "../functions.m2"
 M=AdjacentDensePeriodicMatrix(2,3)
 M_0
 M_1
-F=M_0 - matrix{{z*x_1*x_2,0,0},{0,z*x_1*x_2,0},{0,0,z*x_1*x_2}} --produce the matrix and subtract z from the diagonal
+F=M_0 - id_(M_1^3)*x_1*x_2*z --produce the matrix and subtract z from the diagonal
 f= det F; -- get the determinant
 --for i from 1 to 21 do f = sub(f,e_i=>random(ZZ))
 --f
