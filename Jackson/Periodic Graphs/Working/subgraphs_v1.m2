@@ -1,7 +1,5 @@
 restart
 load("../functions.m2")
-allowableThreads = 8;
---maxAllowableThreads = 8;
 --load("Graphs.m2") -- will need to remove if "faces", "facets", "isPure", "fVector", "skeleton",
 -- "vertices", or "directProduct" as they appear in both Graphs.m2 and functions.m2
 
@@ -45,46 +43,6 @@ isSubgraph (ZZ, ZZ) := (a, b) -> (
     if (a & b) == a then return true else return false;
 )
 
--- Takes the bit representation of the edges in a graph, the determinant of the laplace beltrami
--- operator over the graph, and the number of actions on the graph and gives an array containing
--- the bit representation and the polytope volume
-calculate = method();
-calculate (ZZ, Thing, ZZ) := (bitRep, curDet, actions) -> () -> (
-    return {bitRep, polytopeVolume(curDet, actions)};
-)
-
--- Set to contain all minimal subgraphs
-minimalGraphs = new List;
-
--- Takes a task that represents an instance of the calculate method above and checks to see whether the
--- graph should be added to the list of minimal subgraphs with the largest polytope volume.
-membership = method();
-membership (Task, Task, QQ) := (prevPush, graphCal, maxSolutions) -> () -> (
-    local curGraph; local add; local misc;
-    add = true;
-
-    while not isReady prevPush do nanosleep 10;
-    
-    while not isReady graphCal do nanosleep 10;
-    
-    curGraph = taskResult graphCal;
-    
-    if curGraph_1 == maxSolutions then (
-	for i from 0 to length minimalGraphs - 1 do (
-	    if isSubgraph(minimalGraphs_i_0, curGraph_0) then (
-		add =  false;
-		break;
-	    );
-	);
-    	
-    	if add then (
-	    minimalGraphs = append(minimalGraphs, curGraph);
-	);
-    );
-    return true;
-)
-
-
 actions = 3;
 fundDomain = 2;
 
@@ -111,16 +69,9 @@ maxSolutions = polytopeVolume(originalDet, actions);
 -- determines the number of edges in the graph
 numEdges = numgens DenseGraph_1 - actions*2 - 1;
 
-tm = x-> () -> x;
---tm2 = x->()->x;
---tm3 = x->()->x;
-prevPush = schedule tm(1);
---test1 = createTask tm2(2);
---test2 = createTask tm3(3);
---addDependencyTask(prevPush, {test1, test2})
 
-while not isReady(prevPush) do sleep 1;
-
+-- Set to contain all the minimal subgraphs
+minimalGraphs = new List;
 
 -- An implementation of Gosper's Hack in order to iterate from smallest subgraph to largest subgraph
 for i from 1 to numEdges do (
@@ -140,13 +91,25 @@ for i from 1 to numEdges do (
 	    )
 	);
     
-    	-- handles the parralelization of multiple calculations
-	calTask = schedule calculate(gSet, curDet, actions);
-	curPush = schedule membership(prevPush, calTask, maxSolutions);
+    	-- represents the graph with a number whose bit representation tells which edges are included
+	-- and a number that represents the polytope volume of the determinant of the laplace beltrami
+	-- operator over the graph.
+    	curGraph = {gSet, polytopeVolume(curDet, actions)};
+	add = true;
+	-- we only care about a graph if its polytope has maximal volume
+	if curGraph_1 == maxSolutions then (
+	    for i from 0 to length minimalGraphs - 1 do (
+		-- only add the graph if there is no subgraph that also has maximal volume
+		if isSubgraph(minimalGraphs_i_0, curGraph_0) then (
+		    add = false;
+		    break;
+		);
+	    );
 	
-	prevPush = curPush;
-	
-	
+	    if add then (
+		minimalGraphs = append(minimalGraphs, curGraph);
+	    );
+	);
 	
 	-- used to identify the next subset to be listed
 	c = gSet & -gSet;
@@ -155,10 +118,6 @@ for i from 1 to numEdges do (
     );
     
 );
-
--- wait for final push to array
-while not isReady prevPush do sleep 1;
-
 
 -- prints the binary representation of the graphs in minimalGraphs (so that the graphs can be drawn)
 -- will likely be replaced with something that writes the binary to a file.
@@ -182,22 +141,6 @@ for i from 0 to length minimalGraphs - 1 do (
 -- numbering the vertices in the fundamental domain v_1 through v_n. Then the edge from v_i to x_k v_j
 -- is given by e_((k-1)*n^2 + n*(i-1) + j). The last C(n,2) edges make up the complete graph of the 
 -- fundamental domain.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
