@@ -1,288 +1,307 @@
-------------------
+------------------ 
 --              --
 -- Monodromy.m2 --
 --              --
 ------------------
 --
 -- Thomas Yahl
--- March 22, 2021
---
--- To do: 
---    add checks for EVERYTHING.
---    certification?
+-- June 18, 2021
 --
 
 newPackage(
     "Monodromy",
-    Version=>"0.0.1",
+    Version=>"0.1.0",
     Authors=>{{
 	Name=>"Thomas Yahl",
 	Email=>"Thomasjyahl@math.tamu.edu",
 	Homepage=>"https://math.tamu.edu/~thomasjyahl"
 	}},
-    Headline=>"Methods to numerically compute mondromy groups of problems parameterized by a linear family",
-    PackageImports=>{"DecomposableSparseSystems","MonodromySolver","NumericalAlgebraicGeometry"},
+    Headline=>"Methods to numerically compute monodromy groups of problems parameterized by a linear family",
+    PackageImports=>{"DecomposableSparseSystems","MonodromySolver","NumericalAlgebraicGeometry","NumericalCertification"},
     PackageExports=>{"NumericalAlgebraicGeometry"},
     DebuggingMode=>true
     )
 
 export{
-    --methods
+    --------------------
+    --Monodromy object--
+    --------------------
     "monodromy",
     "family",
     "basePoint",
     "baseSolutions",
+    "alphaConstants",
     "group",
+    ----------------
+    --Constructors--
+    ----------------
     "sparseMonodromy",
     "FanoMonodromy",
+    ----------------
+    --Core methods--
+    ----------------
     "monodromyLoop",
     "changeBasePoint",
-    "fibrePower",
+    "specializeSys",
+    "permutation",
     "saveMonodromy",
     "loadMonodromy",
     "printCycleTally",
-    "printCycleTypes",
+    "printCycleTypes", 
     "printForGAP",
     "testAlternatingMonodromy",
     "testTransitiveMonodromy",
     "testImprimitiveMonodromy",
-    --options
-    "baseElements",
-    "verbosity",
-    "coeffRing",
-    "Solver"
+    -----------
+    --options--
+    -----------
+    "BaseElements",
+    "Solver",
+    "MonteCarlo",
+    "RefineSolns"
     }
 
 
------------------------------------------
------------- Monodromy Class ------------
------------------------------------------
+------------------------------------------
+------------ Monodromy Object ------------
+------------------------------------------
 
-Monodromy = new Type of MutableHashTable
+Monodromy = new Type of HashTable
 Monodromy.synonym = "monodromy group"
 Monodromy.GlobalAssignHook = globalAssignFunction
 Monodromy.GlobalReleaseHook = globalReleaseFunction
 
-monodromy = method(Options=>{baseElements=> tally {}})
-monodromy (List,List,List) := Monodromy => o->(F,basePt,baseSolns)->(    
+net (Monodromy) := String => M->(
+    "Monodromy of family "|toString(M#family)
+    )
+
+--Main constructor of Monodromy objects.
+monodromy = method(Options=>{BaseElements=>{}})
+monodromy (PolySystem,Point,List,List) := Monodromy => o->(F,basePt,baseSolns,cons)->(
     monod := new Monodromy from {
 	family => F,
 	basePoint => basePt,
 	baseSolutions => baseSolns,
-	group => o.baseElements,
+	alphaConstants => cons,
+	group => new MutableHashTable from o.BaseElements,
 	cache => new CacheTable
 	};
+    
+    monod    
+    )
+
+monodromy (PolySystem,Point,List) := Monodromy => o->(F,basePt,baseSolns)->(
+    F' := specializeSys(F,basePt);
+    cons := apply(baseSolns,p->computeConstants(F',p));
+    
+    monod := monodromy(F,basePt,baseSolns,cons,o);
     monod
     )
 
-
-sparseMonodromy = method(Options=>{Solver=>PHCPACK})
-sparseMonodromy (List) := Monodromy => o->Abullet->(
-    n := #Abullet;
-    
-    x := symbol x;
-    a := symbol a;
-    t := symbol t;
-    
-    parms := splice apply(n,i->a_(i,0)..a_(i,numcols(Abullet#i)-1));
-    R := CC[parms][x_0..x_(n-1)];
-    
-    Abullet = apply(Abullet,A->(
-	    v := transpose matrix toList(numcols(A):apply(entries A,l->min l));
-	    A - v
-	    ));
-    Ffamily := apply(n,k->sum(numcols(Abullet#k),j->a_(k,j)*product(n,i->x_i^((Abullet#k)_(i,j)))));
-    
-    S := CC[t_1..t_n];
-    coeffs := flatten apply(Abullet,A->apply(numcols(A),j->5*(random(CC)-random(CC))));
-    phi := map(S,R,toList(t_1..t_n)|coeffs);
-    
-    F := Ffamily/phi;
-    
-    solns := solveDecomposableSystem(F,Software=>o.Solver);
-    
-    M := monodromy(rewriteEqns(Ffamily),coeffs,solns);
+monodromy (List,List,List) := Monodromy => o->(F,basePt,baseSolns)->(
+    M := monodromy(polySystem F, point {basePt}, apply(baseSolns,p-> point {p}));
     M
     )
 
 
-FanoMonodromy = method()
-FanoMonodromy (ZZ,ZZ,Sequence) := Monodromy => (k,m,n)->(
-    --k = 4 --linear space dimension
-    --m = 14 --affine/projective space dimension
-    --n = (2,3) --degrees of hyperplanes
-    --r number of hyperplanes
-    --need (m-k)*(k+1)=sum_i binomial(n_i+k,k).
-    r := #n;
-    
-    x := symbol x;
-    w := symbol w;
-    t := symbol t;
-    y := symbol y;
-    
-    parms := splice apply(r,i->w_(i,1)..w_(i,binomial(n_i+m,m)));
-    variables := toList(x_(1,1)..x_(m-k,k+1));
-    R := QQ[parms][variables];
-    S := R[t_1..t_k];
-    T := QQ[parms][y_1..y_m];
-    
-    phi := map(S,T,apply(m-k,j->sum(toList(x_(j+1,1)..x_(j+1,k)),toList(t_1..t_k),(z,v)->z*v)+x_(j+1,k+1))|toList(t_1..t_k));
-    
-    hypEqns := apply(r,i->basis(0,n_i,module T)*(transpose matrix {toList(w_(i,1)..w_(i,binomial(n_i+m,m)))}));
-    subsEqns := apply(hypEqns,f->(phi(f))_(0,0));
-    coeffs := (flatten apply(subsEqns,f->flatten entries last coefficients f))/(c->sub(c,R));
-    coeffs = rewriteEqns(coeffs);
-    
-    (basePt,baseSolns) := solveFamily(polySystem coeffs);
-    basePt = coordinates basePt;
-    numSolns := length(baseSolns);
-    baseSolns = apply(numSolns,i->coordinates baseSolns#i);
-    
-    M := monodromy(coeffs,basePt,baseSolns);
-    M
-    )
-
-
---needs fixing
+--Checks validity of Monodromy object. Solutions are valid if they are certified.
 isWellDefined (Monodromy) := Boolean => M->(
-    eps := 1e-8;
     F := M#family;
-    R := ring F#0;
-    basePt := M#basePoint;
-    baseSolns := M#baseSolutions;
-    n := #(first baseSolns);
     
-    MisWellDefined := false;
+    R := ring F;
+    numVars := numgens R;
     
-    MisWellDefined
-    )
-
-
-monodromyLoop = method(Options=>{verbosity=>0})
-monodromyLoop (Monodromy,List) := Monodromy => o-> (M,pts)->(
-    F := M#family;
-    R := ring F#0;
-    k := numgens R;
-    basePt := M#basePoint;
-    baseSolns := M#baseSolutions;
-	    
-    t := symbol t;
-    mon := symbol mon;
-    S := CC[toList(mon_1..mon_k)];
+    C := coefficientRing R;
+    numParams := numgens C;
     
-    pts = {basePt}|pts|{basePt};
-    ptsMaps := apply(pts,pt->map(S,R,toList(mon_1..mon_k)|pt));
-    trackedSolns := baseSolns;
-    
-    for i in 0..(#pts-2) do (
-	trackedSolns = track(F/ptsMaps#i,F/ptsMaps#(i+1),trackedSolns,stepIncreaseFactor=>2,tStep=>.01,maxCorrSteps=>1,CorrectorTolerance=>1e-8)/coordinates
+    --Checks for types, square system, number of coordinates
+    if not all(M#baseSolutions,p->class p === Point) then (
+	print("--isWellDefined: Expected solutions of class Point");
+	return false
 	);
-	    
-    baseSolnsRounded := apply(baseSolns,s->rounded(s,5));
-    trackedSolnsRounded := apply(trackedSolns,s->rounded(s,5));
-    perm := try(permutation(baseSolnsRounded,trackedSolnsRounded)) else error "Error";
-    if (class perm===String) then (
-	if (o.verbosity>0) then print("error: no permutation between tracked solutions")
-	) else (
-        T := tally {perm};
-        M#group = M#group + T
+    if not (class M#basePoint === Point) then (
+	print("--isWellDefined: Expected base point to be of class Point");
+	return false
 	);
-    M
-    )
-
-monodromyLoop (Monodromy) := Monodromy => o-> M->(
-    n := numgens coefficientRing ring (M#family#0);
-    monodromyLoop(M,apply(2,i->apply(n,j->10*(random(CC)-random(CC)))),o)
-    )
-
-monodromyLoop (Monodromy,ZZ) := Monodromy => o->(M,n)->(
-    for i in 1..n do (
-	try(monodromyLoop(M,o)) else if (o.verbosity>0) then print("error: path tracking failed");
-	if (o.verbosity>0) then print("Loop "|toString(i)|" complete")
+    if not (F#NumberOfPolys === F#NumberOfVariables) then (
+	print("--isWellDefined: Expected square system");
+	return false
 	);
-    M
-    )
-
-
-changeBasePoint = method()
-changeBasePoint (Monodromy,List) := Monodromy => (M,bp)->(
-    F := M#family;
-    R := ring F#0;
-    k := numgens R;
-    basePt := M#basePoint;
-    baseSolns := M#baseSolutions;
-    grp := M#group;
+    if not ((#(coordinates M#basePoint) === numParams) and all(M#baseSolutions,p->#(coordinates p) === numVars)) then (
+	print("--isWellDefined: Dimension mismatch in base point or solutions");
+	return false
+	);
     
-    mon := symbol mon;
-    S := CC[mon_1..mon_k];
+    --Check all elements of group are permutations of solutions
+    if not all(keys M#group,P->(set P === set toList(0..#(M#baseSolutions)-1)) and (#P === #(M#baseSolutions))) then (
+	print("--isWellDefined: Not all group elements are permutations");
+	return false
+	);
     
-    startMap := map(S,R,toList(mon_1..mon_k)|basePt);
-    endMap := map(S,R,toList(mon_1..mon_k)|bp);
-    
-    newBaseSolns := track(F/startMap,F/endMap,baseSolns,gamma=>random(CC),stepIncreaseFactor=>2,tStep=>.01,maxCorrSteps=>1,CorrectorTolerance=>1e-8)/coordinates;
-    
-    monodromy(F,bp,newBaseSolns,baseElements=>grp)
-    )
-
-
-fibrePower = method()
-fibrePower (Monodromy,ZZ) := Monodromy => (M,k)->(
-    F := M#family;
-    R := ring first F;
-    n := numgens R;
-    
-    S := newRing(R,Variables=>k*n);
-    newF := flatten apply(k,i->(
-	    phi := map(S,R,(gens S)_(toList(n*i..(n*(i+1)-1))));
-	    F/phi
+    --Check all solutions are certified and distinct
+    if any(M#alphaConstants,l-> l#0 > .03) then (
+	if any(M#alphaConstants,l-> l#0 > (13-3*sqrt(17))/4) then (
+	    print("--isWellDefined: Not all solutions certified");
+	    return false
+	    ) else (
+	    print("--isWellDefined: Solutions not refined for tracking");
+	    return false
 	    )
 	);
+    baseSolns := M#baseSolutions;
+    n := #baseSolns;
+    S := subsets(n,2);
+    if not all(S,s->norm(2,point{coordinates baseSolns#(s#0) - coordinates baseSolns#(s#1)})>2*(M#alphaConstants#(s#0)#1 + M#alphaConstants#(s#1)#1)) then (
+	print("--isWellDefined: Not all solutions certified as distinct");
+	return false
+	);
     
-    basePt := M#basePoint;
-    baseSolns := flatten apply(subsets(M#baseSolutions,k),s->(permutations s)/flatten);
-    
-    fibPow := monodromy(newF,basePt,baseSolns);
-    fibPow
+    true
     )
 
 
-saveMonodromy = method()
-saveMonodromy (Monodromy,String) := Nothing => (M,s)->(
-    F := M#family;
-    R := ring F#0;
-    C := coefficientRing R;
-    s << toString gens R << endl << toString gens C << endl << toExternalString (M#family) << endl << toExternalString (M#basePoint) << endl << toExternalString (M#baseSolutions) << endl << toString (M#group) << endl << toString (apply(keys M#cache,h->h=>M#cache#h)) << close
-    )
+--------------------------------------
+------------ Constructors ------------
+--------------------------------------
 
-
-loadMonodromy = method(Options=>{coeffRing=>CC})
-loadMonodromy (String) := Monodromy => o->s->(
-    L := lines get s;
-    vars := value L#0;
-    parms := value L#1;
-    R := o.coeffRing[parms][vars];
-    F := value L#2;
-    basePt := apply(value L#3,z->toCC(defaultPrecision,z));
-    baseSolns := apply(value L#4,L->apply(L,z->toCC(defaultPrecision,z)));
-    grp := value L#5;
-    monodromyCache := value L#6;
+--Constructs a Monodromy object corresponding to the list of supports 'Abullet'.
+sparseMonodromy = method(Options=>{Solver=>PHCPACK})
+sparseMonodromy (List) := Monodromy => o->Abullet->(
+    --Shift supports to positive orthant.
+    Abullet = apply(Abullet,A->(
+	v := transpose matrix toList(numcols(A):apply(entries A,l->min l));
+	A - v
+	));
     
-    M := monodromy(F,basePt,baseSolns,baseElements=>grp);
-    M#cache = new CacheTable from monodromyCache;
+    n := #Abullet;
+    
+    --Create ring for family
+    x := symbol x;
+    a := symbol a;
+    params := splice apply(n,i->a_(i,0)..a_(i,numcols(Abullet#i)-1));
+    R := CC[params][x_0..x_(n-1)];
+    
+    --Generate family
+    F := apply(n,k->sum(numcols(Abullet#k),j->a_(k,j)*product(n,i->x_i^((Abullet#k)_(i,j)))));
+    
+    --Choose base system and compute solutions
+    coeffs := apply(Abullet,A->apply(numcols(A),j->5*(random(CC)-random(CC)) ));
+    basePt := flatten coeffs;
+    
+    sols := solveDecomposableSystem(Abullet,coeffs);
+    
+    M := monodromy(rewriteEqns(polySystem F),point {basePt},apply(sols,p->point {p}));
     M
     )
 
+
+--Constructs a Monodromy object corresponding to the problem of r-planes in P^n 
+----on the intersection of polynomials of degrees d = (d_1,..,d_s).
+FanoMonodromy = method(Options=>{Verbose=>false})
+FanoMonodromy (ZZ,ZZ,Sequence) := Monodromy => o->(r,n,degs)->(
+    if not ((n-r)*(r+1) === sum(degs,d->binomial(d+r,r))) then error "--FanoMonodromy: Expected family of finite Fano problems.";
+    
+    s := #degs;
+    numSolns := FanoNumSolns(r,n,degs);
+    
+    --Coefficient ring for hyperplane equations
+    w := symbol w;
+    params := splice apply(s,i->w_(i,1)..w_(i,binomial(degs#i+n,n)));
+    C := CC[params];
+    
+    --Ring for hyperplane equations
+    y := symbol y;
+    S := C[y_1..y_n];
+    
+    --Coefficient ring for hyperplane equations restricted to linear space (defined by the x_(i,j))
+    x := symbol x;
+    GrVars := toList(x_(1,1)..x_(n-r,r+1));
+    R := C[GrVars];
+    
+    --Ring for hyperplane equations restricted to linear space
+    t := symbol t;
+    T := R[t_1..t_r];
+    
+    --Hyperplane equations
+    F := apply(s,i->basis(0,degs#i,module S)*(transpose matrix {toList(w_(i,1)..w_(i,binomial(degs#i+n,n)))}));
+    
+    --Parameterization of linear space determined by the x_(i,j)
+    L := apply(n-r,j->sum(toList(x_(j+1,1)..x_(j+1,r)),toList(t_1..t_r),(z,v)->z*v)+x_(j+1,r+1))|toList(t_1..t_r);
+    restrict := map(T,S,L);
+    
+    FonL := apply(F,f->restrict f);
+    coeffs := polySystem flatten apply(FonL,f->flatten entries sub(last coefficients f,R));
+    
+    --Solve via MonodromySolver
+    (basePt,baseSolns) := solveFamily(coeffs,TargetSolutionCount=>numSolns,Verbose=>o.Verbose,NumberOfNodes=>3);
+    baseSolns = points baseSolns;
+    if (#baseSolns =!= numSolns) then (
+	print("--FanoMonodromy: Not all solutions found");
+	return(0)
+	);
+    
+    M := monodromy(rewriteEqns(coeffs),basePt,baseSolns);
+    M
+    )
 
 
 --------------------------------------------------------
 ------------ Utility Methods (Not exported) ------------
 --------------------------------------------------------
 
+--Computes the number of solutions to a generic finite Fano problem of 
+----the given data.
+FanoNumSolns = method()
+FanoNumSolns (ZZ,ZZ,Sequence) := ZZ => (r,n,degs)->(
+    x := symbol x;
+    R := ZZ[x_0..x_r];
+    
+    Q := product(degs,d->(
+    	partitionList := apply(subsets(d+r,r),S->(
+       		S = {-1}|S|{d+r};
+       		apply(r+1,i->S#(i+1)-S#i-1)
+       		));
+       	product(partitionList,s->sum(s,gens R,(a,x)->a*x))
+       	));
+    
+    V := product(r+1,i-> product((i+1)..r,j->x_i-x_j) );
+    
+    mon := product(r+1,i->x_i^(n-i));
+    
+    numSols := coefficient(mon,Q*V);
+    numSols
+    )
+
+
+--Specializes a family of systems to a base point(s) in the parameter space.
+specializeSys = method()
+specializeSys (PolySystem,Point) := PolySystem => (F,pt)->(
+    R := ring F;
+    n := numgens R;
+    z := symbol z;
+    S := CC[z_1..z_n];
+    phi := map(S,R,toList(z_1..z_n)|(coordinates pt));
+    F' := polySystem apply(equations F,f->phi(f));
+    F'
+    )
+
+specializeSys (PolySystem,List) := List => (F,pts)->(
+    R := ring F;
+    n := numgens R;
+    z := symbol z;
+    S := CC[z_1..z_n];
+    for pt in pts list (
+	phi := map(S,R,toList(z_1..z_n)|(coordinates pt));
+    	F' := polySystem apply(equations F,f->phi(f));
+    	F'
+	)
+    )
+
+
 --rewrites equations in k[parms][variables] without doublely-indexed variables.
 rewriteEqns = method()
-rewriteEqns (List) := Sequence => F->(
-    try uniform(F) else error "Error: Expected polynomials of the same ring";
-    R := ring F#0;
+rewriteEqns (PolySystem) := PolySystem => F->(
+    R := ring F;
     n := numgens R;
     m := numgens coefficientRing R;
     
@@ -291,71 +310,60 @@ rewriteEqns (List) := Sequence => F->(
     
     newR := CC[a_1..a_m][x_1..x_n];
     phi := map(newR,R,toList(x_1..x_n)|toList(a_1..a_m));
-    F/phi
+    polySystem apply(equations F,f->phi(f))
     )
 
 
-rounded = method()
-rounded (List,ZZ) := List => (Z,n)->(
-    apply(Z,z->round(10^n*z)/10^n)
-    )
-
-
-setDifference = method()
-setDifference (List,List) := List => (A,B)->(
-    L := select(A,x->not member(x,B));
-    L
-    )
-
-
+--Determines if a set of Points corresponds to a permutation of the solutions
+----over the base of a given Monodromy object (via alpha theory).
 permutation = method()
-permutation (List,List) := List => (A,B)->(
-    if not (A === unique A and B === unique B) then error "-- permutation: list has repeated elements";
-    if any(A,a->not member(a,B)) or any(B,b->not member(b,A)) then error "-- permutation: no bijection between lists";
-
-    apply(A,a->position(B,b->b==a)+1)
+permutation (Monodromy,List) := List => (M,S)->(
+    numSolns := #(M#baseSolutions);
+    P := apply(S,p->position(toList(0..numSolns-1),i->norm(2,point {coordinates M#baseSolutions#i - coordinates p}) < 1/(20*M#alphaConstants#i#2)));
+    if (set P === set toList(0..numSolns-1)) then (
+	P
+	) else (
+	error "--permutation: No permutation between given list of Points and base solutions."
+	)
     )
 
 
---this is terribly written.                                                                                                           
+--Gives a permutation of {0,..,n} given in list form in cycle notation
 printPermutation = method()
-printPermutation (List) := String => (P)->(
-    if not (P === unique P and all(P,n->member(n,toList(1 .. #P)))) then error "--printPermutation: not permutation";
-
+printPermutation (List) := String => P->(
     cycles := {};
-    L := toList(1 .. #P);
-    while (#L > 0) do (
-        i := first L;
-        s := "(" | toString(i);
-        while (P#(i-1) != first L) do (
-            L = delete(P#(i-1),L);
-            i = P#(i-1);
-            s = s | "," | toString(i);
-            );
-        L = drop(L,1);
-        s = s | ")";
-        if (#separate(",",s)>1) then (
-	    cycles = append(cycles,s)
-	    )
-        );
+    L := toList(0..#P-1);
+    while (#L>0) do (
+	i := first L;
+	if (P#i =!= i) then (
+	    c := {i+1};
+	    while (P#i =!= first L) do (
+	    	L = delete(P#i,L);
+	    	c = append(c,P#i+1);
+	    	i = P#i;
+	    	);
+	    cycles = append(cycles,c)
+	    );
+	L = drop(L,1)
+	);
     if (#cycles > 0) then (
-	fold(cycles,(sigma,tau)->sigma|tau)
+	concatenate apply(cycles,l->toString toSequence l)
 	) else (
 	"()"
 	)
     )
 
 
+--Counts the number of cycles of a permutation written in list form
 numCycles = method()
 numCycles (List) := ZZ => P->(
-    if not (P === unique P and all(P,n->member(n,toList(1 .. #P)))) then error "--numCycles: not permutation";
     cycles := 0;
-    L := toList(1 .. #P);
+    L := toList(0 .. #P-1);
     while (#L>0) do (
 	i := first L;
-	while (P#(i-1) != first L) do (
-	    L = delete(P#(i-1),L);
-            i = P#(i-1)
+	while (P#i != first L) do (
+	    L = delete(P#i,L);
+            i = P#i
 	    );
 	L = drop(L,1);
 	cycles = cycles + 1
@@ -364,50 +372,206 @@ numCycles (List) := ZZ => P->(
     )
 
 
+--Computes the cycle type of a permutation given in list form.
 cycleType = method()
-cycleType (List) := ZZ => P->(
-    if not (P === unique P and all(P,n->member(n,toList(1 .. #P)))) then error "--cycleType: not permutation";
+cycleType (List) := String => P->(
     cType := {};
-    L := toList(1 .. #P);
+    L := toList(0 .. #P-1);
     while (#L>0) do (
 	len := 1;
 	i := first L;
-	while (P#(i-1) != first L) do (
-	    L = delete(P#(i-1),L);
-            i = P#(i-1);
+	while (P#i != first L) do (
+	    L = delete(P#i,L);
+            i = P#i;
 	    len = len + 1
 	    );
 	L = drop(L,1);
 	cType = append(cType,len)
 	);
-    sort cType
+    toString toSequence sort cType
     )
 
 
-
 --------------------------------------
------------- Main Methods ------------
+------------ Core Methods ------------
 --------------------------------------
 
+--Refines the solutions of a given monodromy object. Uses
+----the same options as 'refine' given in "NumericalAlgebraicGeometry".
+refine (Monodromy) := Monodromy => o->M->(
+    F' := specializeSys(M#family,M#basePoint);
+    newSolns := refine(F',M#baseSolutions,o);
+    grp := pairs M#group;
+    N := monodromy(M#family,M#basePoint,newSolns,BaseElements=>grp);
+    N
+    )
+
+
+--Tracks solutions from base point to given points and back to base point.
+----The resulting permutation of solutions is recorded.
+monodromyLoop = method(Options=>{RefineSolns=>false,Verbosity=>0,stepIncreaseFactor=>2,tStep=>.01,maxCorrSteps=>1,CorrectorTolerance=>1e-6,tStepMin=>1e-8})
+monodromyLoop (Monodromy,List) := Monodromy => o-> (M,pts)->(
+    F := M#family;
+    R := ring F;
+    basePt := M#basePoint;
+    baseSolns := M#baseSolutions;
+	    
+    pts = {basePt}|pts|{basePt};
+
+    trackedSolns := baseSolns;
+    
+    --Specialized systems
+    specSystems := specializeSys(F,pts);
+    
+    --Tracking base solutions along path defined by given points
+    trackingOpts := new OptionTable from {
+	stepIncreaseFactor=>o.stepIncreaseFactor,
+	tStep=>o.tStep,
+	maxCorrSteps=>o.maxCorrSteps,
+	CorrectorTolerance=>o.CorrectorTolerance,
+	tStepMin=>o.tStepMin
+	};
+    for i in 0..(#pts-2) do (
+	trackedSolns = track(specSystems#i,specSystems#(i+1),trackedSolns,trackingOpts);
+	if any(trackedSolns,p->status p != Regular) then error "--monodromyLoop: Tracking failure"
+	);
+    
+    --Refine solutions 
+    if (o.RefineSolns) then (
+	trackedSolns = refine(specSystems#0,trackedSolns,Bits=>65)
+	);
+    
+    --Checking that tracked solutions correspond to permutation of base solutions
+    try(perm := permutation(M,trackedSolns)) else (
+	if (o.Verbosity>0) then print("--monodromyLoop: No permutation from tracked solutions");
+	if (o.Verbosity>1) then error "--monodromyLoop: Break in function";
+	return M
+	);
+    if (o.Verbosity>0) then print printPermutation perm;
+    
+    --Adjoin permutation to the list of permutations
+    if M#group#?perm then (
+	M#group#perm = M#group#perm + 1
+	) else (
+	M#group#perm = 1
+	);
+    M
+    )
+
+--Tracks solutions from base point along a random triangular path. The 
+----resulting permutation of solutions is recorded.
+monodromyLoop (Monodromy) := Monodromy => o-> M->(
+    n := numgens coefficientRing ring (M#family);
+    r := norm(2,M#basePoint);
+    pts := apply(2,i->point {apply(n,j->5*(random(CC)-random(CC)) )});
+    monodromyLoop(M,pts,o)
+    )
+
+--Tracks solutions from base point along a given number of random triangular
+----paths. The resulting permutations of solutions are recorded.
+monodromyLoop (Monodromy,ZZ) := Monodromy => o->(M,n)->(
+    for i in 1..n do (
+	try(monodromyLoop(M,o)) else if (o.Verbosity>0) then print("Path tracking failed");
+	if (o.Verbosity>0) then print("Loop "|toString(i)|" complete")
+	);
+    M
+    )
+
+
+--Tracks solutions from the base point to a new chosen point. A new
+----Monodromy object is returned with the chosen base point.
+--
+--Monte carlo solutions instead of tracking along one path
+changeBasePoint = method(Options=>{MonteCarlo=>10,stepIncreaseFactor=>3,tStep=>.001,maxCorrSteps=>3,CorrectorTolerance=>1e-6})
+changeBasePoint (Monodromy,Point) := Monodromy => o->(M,bp)->(
+    F := M#family;
+    basePt := M#basePoint;
+    baseSolns := M#baseSolutions;
+    grp := pairs M#group;
+    
+    trackingOpts := new OptionTable from {
+	gamma=>random(RR)+ii*random(RR),
+	stepIncreaseFactor=>o.stepIncreaseFactor,
+	tStep=>o.tStep,
+	maxCorrSteps=>o.maxCorrSteps,
+	CorrectorTolerance=>o.CorrectorTolerance
+	};
+    specSystems := specializeSys(F,{basePt,bp});
+    
+    trackedSolns := track(specSystems#0,specSystems#1,baseSolns,trackingOpts);
+    newBaseSolns := select(trackedSolns,p->status p == Regular);
+    COUNT := 1;
+    while (#newBaseSolns != #baseSolns) and (COUNT < o.MonteCarlo) do (
+	trackedSolns = track(specSystems#0,specSystems#1,baseSolns,trackingOpts++{gamma=>random(CC)});
+	trackedSolns = select(trackedSolns,p->status p == Regular);
+	additionalSolns := select(trackedSolns,p->not any(newBaseSolns,q->p==q));
+	newBaseSolns = newBaseSolns|additionalSolns;
+	COUNT = COUNT + 1
+	);
+    
+    if (#newBaseSolns === #baseSolns) then (
+	monodromy(F,bp,newBaseSolns,BaseElements=>grp)
+	) else (
+	error "--changeBasePoint: Couldn't find all solutions over new base."
+	)
+    )
+
+
+--Writes a Monodromy object to a file.
+----Fix to save alphaConstants
+saveMonodromy = method()
+saveMonodromy (Monodromy,String) := Nothing => (M,s)->(
+    F := M#family;
+    R := ring F;
+    C := coefficientRing R;
+    s << toString gens R << endl << toString gens C << endl << toExternalString (M#family) << endl << toExternalString (M#basePoint) << endl << toExternalString (M#baseSolutions) << endl << toString (M#alphaConstants) << endl << toString (pairs M#group) << endl << toString (apply(keys M#cache,h->h=>M#cache#h)) << close
+    )
+
+
+--Recovers a Monodromy object from a file.
+--Fix to load alphaConstants
+loadMonodromy = method()
+loadMonodromy (String) := Monodromy => s->(
+    L := lines get s;
+    polyVars := value L#0;
+    parms := value L#1;
+    R := CC[parms][polyVars];
+    F := value L#2;
+    basePt := value L#3;
+    baseSolns := value L#4;
+    alpha := value L#5;
+    grp := value L#6;
+    monodromyCache := value L#7;
+    
+    M := monodromy(F,basePt,baseSolns,alpha,BaseElements=>grp);
+    M
+    )
+
+
+--Prints tracked permutations in cycle notation.
 printCycleTally = method()
 printCycleTally (Monodromy) := Nothing => M->(
     T := M#group;
-    scan(select(keys T,k->class k === List),sigma-> print(printPermutation(sigma) | ": " | toString(T#sigma)))
+    scan(keys T,sigma-> print(printPermutation(sigma) | ": " | toString(T#sigma)))
     )
 
 
+--Prints cycle types of tracked permutations.
 printCycleTypes = method()
 printCycleTypes (Monodromy) := Nothing => M->(
-    T := elements M#group;
-    tally apply(T,cycleType)
+    T := M#group;
+    cycTypes := unique apply(keys T,sigma->cycleType(sigma));
+    scan(cycTypes,sigma-> print sigma)
     )
 
 
+--Outputs a string that represents the group generated by tracked
+----permutations. Output can be read into GAP.
 printForGAP = method()
 printForGAP (Monodromy) := String => M->(
-    T := M#group;
-    if (#(keys T) > 0) then (
-	S := apply(keys T,sigma->printPermutation(sigma));
+    T := keys M#group;
+    if (#T > 0) then (
+	S := apply(T,sigma->printPermutation(sigma));
     	"Group("|fold(S,(s,t)->s|","|t)|")"
 	) else (
 	"Group()"
@@ -415,39 +579,55 @@ printForGAP (Monodromy) := String => M->(
     )
 
 
+--Determines the size of the group generated by tracked permutations.
+size (Monodromy) := M->(
+    if (#(M#group) == 0) then return 0;
+    inFile := temporaryFileName();
+    outFile := temporaryFileName();
+    grp := printForGAP M;
+    inFile << "G := "|grp|";; Size(G);" << close; 
+    run("(cat "|inFile|" | gap -q) 1>"|outFile);
+    n := get outFile;
+    removeFile inFile;
+    removeFile outFile;
+    value n
+    )
+
+
+--Determines whether the group generated by tracked permutations is
+----a subgroup of the alternating group.
 testAlternatingMonodromy = method()
 testAlternatingMonodromy (Monodromy) := Boolean => M->(
-    T := M#group;
-    if (#(keys T) > 0) then (
-    	m := length (first keys T);
-    	all(keys T,L-> (m - numCycles L) % 2 === 0)
+    T := keys M#group;
+    if (#T > 0) then (
+    	m := length (first T);
+    	all(T,L-> (m - numCycles L) % 2 === 0)
 	) else (
 	false
 	)
     )
 
 
+--Determines whether the group generated by tracked permutations 
+----is a transitive group. A given integer 'k' checks for
+----k-transitivity of the generated group.
 testTransitiveMonodromy = method()
 testTransitiveMonodromy (Monodromy) := Boolean => M->(
     n := #(M#baseSolutions);
-    #(unique apply(keys M#group,first)) == n
+    #(set apply(keys M#group,first)) == n
     )
 
 testTransitiveMonodromy (Monodromy,ZZ) := Boolean => (M,k)->(
     n := #(M#baseSolutions);
-    #(unique apply(keys M#group,P->P_(toList(0..k-1)))) == binomial(n,k)*k!
+    #(set apply(keys M#group,P->P_(toList(0..k-1)))) == binomial(n,k)*k!
     )
 
 
+--Determines whether the group generated by tracked permutations
+----has nontrivial blocks.
 testImprimitiveMonodromy = method()
 testImprimitiveMonodromy (Monodromy) := Boolean => M->(
     
-    )
-
-
-monodromyOrder = method()
-monodromyOrder (Monodromy) := ZZ => M->(
-
     )
 
 
@@ -463,7 +643,7 @@ monodromyOrder (Monodromy) := ZZ => M->(
 
 end
 
---loads old form into new form.
+--Method for converting old Monodromy objects to new Monodromy objects.
 convert = method()
 convert (String) := Nothing => s->(
     L := lines get s;
@@ -476,15 +656,19 @@ convert (String) := Nothing => s->(
     grp := value L#5;
     monodromyCache := value L#6;
     
-    M := monodromy(F,basePt,baseSolns,baseElements=>grp);
+    M := monodromy(F,basePt,baseSolns,BaseElements=>grp);
     M#cache = new CacheTable from monodromyCache;
     saveMonodromy(M,s)
     )
 
---To check sparse family (easily modified for other families.
-F = matrix{F#family}
-R = ring F
-maxN = max apply(M#baseSolutions,s->(
-    f = map(CC,R,s|M#basePoint);
-    norm f(F)
-))
+
+
+restart
+loadPackage("Monodromy")
+A = {matrix{{0,0,1,1},{0,1,0,1}},matrix{{0,0,1,1},{0,1,0,1}}}
+M = sparseMonodromy A
+monodromyLoop(M,20,Verbosity=>1)
+
+B = {matrix{{0,0,1,1},{0,1,0,1}},matrix{{0,0,1,1,2},{0,1,0,1,0}}}
+M = sparseMonodromy B
+monodromyLoop(M,20,Verbosity=>1)

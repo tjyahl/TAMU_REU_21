@@ -1,0 +1,7 @@
+--example file for creating lacunary systems
+
+restart
+loadPackage("DecomposableSparseSystems")
+loadPackage("Monodromy",FileName=>"../Monodromy.m2")
+
+--Lacunary systems are easy to generate
