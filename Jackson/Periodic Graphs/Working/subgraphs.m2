@@ -69,13 +69,14 @@ membership (Task, Task, QQ) := (prevPush, graphCal, maxSolutions) -> () -> (
     
     curGraph = taskResult graphCal;
     
-    if curGraph_1 == maxSolutions then (
-	for i from 0 to length minimalGraphs - 1 do (
-	    if isSubgraph(minimalGraphs_i_0, curGraph_0) then (
-		add =  false;
-		break;
+    try curGraph_1 then (
+    	if curGraph_1 == maxSolutions then (
+	    for i from 0 to length minimalGraphs - 1 do (
+	    	if isSubgraph(minimalGraphs_i_0, curGraph_0) then (
+		    add =  false;
+		    break;
+	    	);
 	    );
-	);
     	
     	if add then (
 	    minimalGraphs = append(minimalGraphs, curGraph);
@@ -85,7 +86,7 @@ membership (Task, Task, QQ) := (prevPush, graphCal, maxSolutions) -> () -> (
 )
 
 
-actions = 3;
+actions = 2;
 fundDomain = 2;
 
 
@@ -137,7 +138,7 @@ for i from 1 to numEdges do (
 	    -- if the bit is 0 specialize the corresponding edge to 0
 	    if getBit(gSet, j) != 1 then (
 		curDet = sub(curDet, e_(j + 1)=>0);
-	    )
+	    );
 	);
     
     	-- handles the parralelization of multiple calculations
@@ -166,6 +167,8 @@ file = openOut("results.txt");
 file << "Time to completion: ";
 file << cpuTime();
 file << "s" << endl;
+file << "vertices: " << fundDomain << endl;
+file << "actions: " << actions << endl;
 file << "results:" << endl;
 for i from 0 to length minimalGraphs - 1 do (
     view = new List;
