@@ -798,7 +798,7 @@ local DF;
 local Ra;
     DF = {};    
     DF = append(DF, sub(det(outMatrix,Strategy => Cofactor),R));
-    for i from 1 to 2 do (
+    for i from 1 to m do (
     DF = append(DF,(diff(x_i, DF_0)));
     );
      Ra = QQ[x_1 .. x_m, y_1 .. y_m,z];
