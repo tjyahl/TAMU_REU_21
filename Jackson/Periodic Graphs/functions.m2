@@ -47,21 +47,32 @@ myMinkowskiSumHelper (Thing, List) := (Thing, List) => (curPoly, polyList) -> (
 myMixedVolume  = method(TypicalValue => QQ) --function to call
 myMixedVolumeRec = method(TypicalValue => Sequence) --recursive helper function
 myMixedVolume (List) := QQ => (initList) -> (
-    	return (myMixedVolumeRec (initList, { }))#0
+    	tracklist = {};
+	for i from 1 to #initList do(
+	    tracklist = append(tracklist, i);
+	    );
+    	return (myMixedVolumeRec (initList, { }, tracklist))#0
     )
-myMixedVolumeRec (List ,List) := (QQ, List)  => (polyList,accountedList) -> (--accountedList being used as a lazy redudancy reduction, storage is cheap
-    local mvolume; local mixedpoly; local couple; local curpoly;
-    	if (any(accountedList, n-> n == polyList)) then return (0, accountedList);
-	accountedList = append(accountedList, polyList);
-	if (#polyList === 1) then return (volume polyList_0, accountedList);
+myMixedVolumeRec (List ,List, List) := (QQ, List)  => (polyList,accountedList, trackList) -> (--accountedList being used as a lazy redudancy reduction, storage is cheap
+    local mvolume; local mixedpoly; local couple; local curpoly; local curtrack;
+    	if (any(accountedList, n-> n == trackList)) then return (0, accountedList);
+	accountedList = append(accountedList, trackList);
+	if (#polyList === 1) then (
+	    if (isFullDimensional polyList_0 == false) then return (0, accountedList);
+	     return (volume polyList_0, accountedList);		 
+		 );
 	mvolume = 0;
-	mixedpoly = myMinkowskiSum(polyList);
-	mvolume = volume(mixedpoly);
+--	mixedpoly = myMinkowskiSum(polyList);
+        mixedpoly = fold(minkowskiSum, polyList);
+	if (isFullDimensional mixedpoly == false) then return (0, accountedList);
+	 mvolume = volume mixedpoly;
 	for i from 0 to #polyList-1 do(
 	    curpoly = drop(polyList, {i,i});
-	    couple = myMixedVolumeRec(curpoly, accountedList);
+	    curtrack = drop(trackList, {i,i});
+	    couple = myMixedVolumeRec(curpoly, accountedList, curtrack);
 	    mvolume = mvolume - couple#0;
-	   -- <<couple#1; was just here for debugging
+--	   <<couple#0;-- was just here for debugging
+--	   <<curtrack;
 	    accountedList = couple#1;
 	    );
 	return (mvolume, accountedList)	
@@ -783,8 +794,15 @@ AdjacentDensePeriodicMatrix(ZZ,ZZ) := (Sequence) => (m,n)-> (
 --     stdio << theideals;
 --     stdio << dims;
 --     stdio << degs;
-     
-     return (outMatrix,R,I)
+local DF;
+local Ra;
+    DF = {};    
+    DF = append(DF, sub(det(outMatrix,Strategy => Cofactor),R));
+    for i from 1 to m do (
+    DF = append(DF,(diff(x_i, DF_0)));
+    );
+     Ra = QQ[x_1 .. x_m, y_1 .. y_m,z];
+     return (outMatrix,R,I,Ra,DF)
      )
  
 
