@@ -1,35 +1,8 @@
 restart
 load("../functions.m2")
-allowableThreads = 1;
---load("Graphs.m2") -- will need to remove if "faces", "facets", "isPure", "fVector", "skeleton",
--- "vertices", or "directProduct" as they appear in both Graphs.m2 and functions.m2
 
 -- useful function definitions:
 
-
--- Takes the determinant and the number of actions on a graph and 
--- returns the mixed volume of the newton polytope defined by the 
--- determinant.
-polytopeVolume = method();
-polytopeVolume (Thing, ZZ) := (f, actions) -> (
-    local E; local L; local K; local l;
-    E = exponents f;
-    L = new List;
-    for i from 0 to length E - 1 do (
-	l = new List;
-	for j from 0 to actions - 1 do (
-	    l = append(l, E_i_j - E_i_(j + actions));
-	);
-    	l = append(l, E_i_(actions*2));
-	L = append(L, l);
-    );
-    L = unique L;
-    
-    K = transpose matrix L;
-    
-    return (actions + 1)! * volume convexHull K
-    
-)
 
 -- performs the steps to remove the edge variables and the inverse variables from the given
 -- polynomial. Need to be concious of any change in rings (should move to one without edges)
@@ -48,55 +21,6 @@ getExponents (Thing, ZZ) := (f, actions) -> (
     );
     L = unique L;
     return L
-)
-
--- Takes an integer a and returns the nth bit in a's bit representation
-getBit = method();
-getBit (ZZ, ZZ) := (a, n) -> (
-    return (a >> n) & 1;
-)
-
--- Takes two integers whose bit representations give the edges that are included in the represented 
--- graphs and returns true if the first graph is a subgraphs of the second.
-isSubgraph = method();
-isSubgraph (ZZ, ZZ) := (a, b) -> (
-    if (a & b) == a then return true else return false;
-)
-
--- Takes a polynomial as well as the number of actions (n) and vertices (m) and returns true iff the 
--- polynomial contains the terms x_i^2m * PI_(i!=j) x_j^m as well as PI_(i!=j) x_j^m for each
--- 1 <= i <= n
-polyTerms = method();
-polyTerms (Thing, ZZ, ZZ) := (Poly, n, m) -> (
-    local E; local l; local L; local temp; local found;
-    E = exponents Poly;
-    L = new List;
-    for i from 0 to length E - 1 do (
-	l = new List;
-	for j from 0 to n - 1 do (
-	    l = append(l, E_i_j - E_i_(j + n));
-	);
-    	l = append(l, E_i_(n*2));
-	L = append(L, l);
-    );
-    L = unique L;
-    
-    for i from 0 to n - 1 do (
-	temp = new List;
-	for j from 0 to n - 1 do (
-	    if j == i then temp = append(temp, 2*m) else temp = append(temp, m); 
-	);
-    	temp = append(temp, 0);
-	found = false;
-    	for j from 0 to length L - 1 do (
-	    if L_j == temp then (
-	    	found = true;
-		break;
-	    );
-	);
-    	if found then continue else return false;
-    );
-    return true;
 )
 
 -- Used to generate the next combination of permutations to inspect
@@ -140,37 +64,35 @@ generateEdges (List, List) := (permutation, permutes) -> (
     return edges;
 )
 
--- Takes the original determinant and a list of edge numbers in the desired graph and specializes
--- the determinant. Can be improved as edgeList is a sorted list.
-specializeDet = method();
-specializeDet (Thing, List, List) := (f, edges, edgeWeights) -> (
-    local j;
-    j = 0;
-    for i from 1 to length edgeWeights - 1 do (
-	if j <= length edges - 1 then (
-	    if i != edges_j then f = sub(f, e_i=>0) else (
-		f = sub(f, e_i=>edgeWeights_i);
-		j = j + 1;
-	    );
-	) else (
-	    f = sub(f, e_i=>0);
-	);
-    );
-    return f
-)
-
 
 
 
 actions = 2;
-fundDomain = 3;
+fundDomain = 2;
+
+file1 = openOut("coneSolutions.txt");
+file1 << "vertices: " << fundDomain << endl;
+file1 << "actions: " << actions << endl;
+file1 << "results: " << endl;
+file1 << close;
+file1 = openOutAppend("coneSolutions.txt");
+
+file2 = openOut("noConeSolutions.txt");
+file2 << "vertices: " << fundDomain << endl;
+file2 << "actions: " << actions << endl;
+file2 << "results: " << endl;
+file2 << close;
+file2 = openOutAppend("noConeSolutions.txt");
+
 
 
 -- sets up the original representation of the graph and solves for the number of solutions
 DenseGraph = AdjacentDensePeriodicMatrix(actions, fundDomain);
 DF = DenseGraph_4;
 
+Generators = new Array from take(gens DenseGraph_1, actions*2 + 1);
 
+Z = (ZZ/2039) Generators;
 
 -- determines the number of edges in the graph
 numEdges = numgens DenseGraph_1 - actions*2 - 1;
@@ -207,7 +129,7 @@ while counter < fundDomain do (
 currentPermutation = new MutableList;
 for i from 1 to actions - 1 do currentPermutation = append(currentPermutation, 0);
 currentPermutation = append(currentPermutation, 0); -- used to skip the case with all identity
-Info = new List;
+--Info = new List;
 
 specialization = new List;
 for i from 1 to actions do (
@@ -219,14 +141,13 @@ for i from 1 to actions do (
 specialization = append(specialization, z);
 a = new List;
 for i from 1 to numEdges do (
-    a = append(a, random(500) + 1);
+    a = append(a, random(2037) + 1);
 )
 
-faceSolutions = new List;
-noFaceSolutions = new List;
+--faceSolutions = new List;
+--noFaceSolutions = new List;
 
-
-
+--currentPermutation = new MutableList from {4,5,5};
 -- loop through all combinations of permutations
 while true do (
     try currentPermutation == false then break else (
@@ -242,7 +163,7 @@ while true do (
 	    );
        	);
 	
-	specMap = map(DenseGraph_3, DenseGraph_1, specialization | currentSpecialization);
+	specMap = map(Z, DenseGraph_1, specialization | currentSpecialization);
 	-- set up the operator
 	DFs = apply(DF, n -> specMap(n));
 	DFsN = apply(DFs, n -> convexHull transpose matrix getExponents(n, actions));
@@ -268,56 +189,90 @@ while true do (
 	    dims = append(dims, dim theIdeals_i);
 	    degs = append(degs, degree theIdeals_i);
 	);
-	Info = append(Info, {coneListDF, dims, degs, edgeList});
+	--Info = append(Info, {coneListDF, dims, degs, edgeList});
     	-- checks that dimensions are all -1 for any face that is not the apex or base
         for i from 0 to length dims - 1 do (
 	    if dims_i != -1 then (
 	    	ROWS = entries coneListDF_i;
 	    	added = false;
+		
+	       
 	    	for j from 0 to length ROWS - 2 do (
 		    if sum(ROWS_j) != 0 then (
-		    	faceSolutions = append(faceSolutions, {edgeList, coneListDF, dims});
+		    	--faceSolutions = append(faceSolutions, {edgeList, coneListDF, dims});
+			
+			-- print result to a file
+    			file1 << "Graph: " << edgeList << endl;
+    			file1 << "Cones with solutions: " << endl;
+    			temp = new List;
+    			for j from 0 to length dims - 1 do (
+			    if dims_j != -1 then temp = append(temp, coneListDF_j);
+    			);
+    			file1 << temp << endl;
+			temp = new List;
+
 		    	added = true;
 		    	break;
 		    );
 	    	);
 	        if added then break;
 	    	if sum(ROWS_(length ROWS - 1)) == 0 then (
-		    faceSolutions = append(faceSolutions, edgeList);
+		    --faceSolutions = append(faceSolutions, edgeList);
+		    
+		    -- append results to a file
+		    file1 << "Graph: " << edgeList << endl;
+    		    file1 << "Cones with solutions: " << endl;
+    		    temp = new List;
+    		    for j from 0 to length dims - 1 do (
+			if dims_j != -1 then temp = append(temp, coneListDF_j);
+    		    );
+    		    file1 << temp << endl;
+		    temp = new List;
+		    
 		    added = true;
 		    break;
 	    	);
 	        if added then break;
 	    	if not added then (
-		    noFaceSolutions = append(noFaceSolutions, edgeList);
+		    --noFaceSolutions = append(noFaceSolutions, edgeList);
+		    
+		    file2 << edgeList << endl;
 		    break;
 	    	);
 	    );
     	);
-	
+	collectGarbage();
 	currentPermutation = nextPermutation(currentPermutation, actions, length permutes);
     );
 );
 
-file = openOut("coneSolutions.txt");
-file << "vertices: " << vertices << endl;
-file << "actions: " << actions << endl;
-file << "results: " << endl;
+file1 << close;
+file2 << close;
+    
+
+--file = openOutAppend("coneSolutions.txt");
+--file << "vertices: " << fundDomain << endl;
+--file << "actions: " << actions << endl;
+--file << "results: " << endl;
 
 
-conesWSolutions = new List;
-for i from 0 to length faceSolutions - 1 do (
-    file << "Graph: " << faceSolutions_i_0 << endl;
-    file << "Cones with solutions: " << endl;
-    temp = new List;
-    for j from 0 to length faceSolutions_i_2 - 1 do (
-	if faceSolutions_i_2_j != -1 then temp = append(temp, faceSolutions_i_1_j);
-    );
-    conesWSolutions = append(conesWSolutions, temp);
-    file << temp << endl;
-)
+--conesWSolutions = new List;
+--for i from 0 to length faceSolutions - 1 do (
+--    file << "Graph: " << faceSolutions_i_0 << endl;
+--    file << "Cones with solutions: " << endl;
+--    temp = new List;
+--    for j from 0 to length faceSolutions_i_2 - 1 do (
+--	if faceSolutions_i_2_j != -1 then temp = append(temp, faceSolutions_i_1_j);
+--    );
+--   conesWSolutions = append(conesWSolutions, temp);
+--    file << temp << endl;
+--)
 
-file << close;
+--file << close;
+
+--file = openOutAppend("noConeSolutions.txt");
+--file << noFaceSolutions << endl;
+--file << close;
 
 
 
