@@ -1,10 +1,10 @@
 restart
+loadPackage("Polyhedra")
 loadPackage("DecomposableSparseSystems")
 loadPackage("Monodromy",FileName=>"Monodromy.m2")
 
 k = 2
-outputs = {}
-for i in 0 .. 1000 do(
+for i in 0 .. 10000 do(
 -- First, a random set of 3 matrices is generated with the 3rd row of the first 2 all 0's
     termNumber = {random(2,5),random(2,5),random(2,5)};
     A = {mutableMatrix(ZZ,k+1,termNumber_0),mutableMatrix(ZZ,k+1,termNumber_1),mutableMatrix(ZZ,k+1,termNumber_2)};
@@ -38,24 +38,32 @@ for i in 0 .. 1000 do(
     residualSupports = apply(addedSupports,S->S^(toList(k..numRows S - 1)));
     if not try isDecomposable residualSupports else true then (
 	
-    (F,sols) = solveDecomposableSystem(simpleA,,Software=>M2);
-    d = #sols;
-    (F,sols) = solveDecomposableSystem(residualSupports,,Software=>M2);
-    r = #sols;
+--    (F,sols) = solveDecomposableSystem(simpleA,,Software=>M2);
+--    d = #sols;
+--    (F,sols) = solveDecomposableSystem(residualSupports,,Software=>M2);
+--    r = #sols;
+    
+    d = mixedVolume {convexHull(simpleA_0),convexHull(simpleA_1)};
+    residualEntries = (entries(residualSupports_0))_0;
+    r = max(residualEntries) - min(residualEntries);
     
     maxGaloisSize = (r!)^d*d!;
     if maxGaloisSize > 1 then (
-    M = sparseMonodromy (A,Solver=>M2);
+    try (M = sparseMonodromy (A,Solver=>M2));
+    if not try M == null else false then(
     monodromyLoop(M,10);
     monodromySize = size(M);
-    if monodromySize <= (maxGaloisSize/2) then (outputs = append(outputs,{maxGaloisSize,monodromySize,A}));
+--    if monodromySize <= (maxGaloisSize/2) then (outputs = append(outputs,{maxGaloisSize,monodromySize,A}));
+    if monodromySize <= (maxGaloisSize/2) then ("outputs.txt" << get "outputs.txt" << concatenate {toString(maxGaloisSize),", ",toString(monodromySize),", ",toString(i),", ",toString(A)} << endl << close);
+    ) else ("outputs.txt" << get "outputs.txt" << toString(A) << endl << close);
     );
     );
     );
 );
-outputs
+
 -- Outputs gives a list of {index of system in outputMatrices, maxGaloisSize, monodromy output if maxGaloisSize<1000, -1 elsewise}
 
+-- Ignore this part. I still need to update it.
 refinedOutputs = {}
 for system in outputs do(
     A = system#2;
