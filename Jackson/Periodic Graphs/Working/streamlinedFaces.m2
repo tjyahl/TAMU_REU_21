@@ -67,8 +67,8 @@ generateEdges (List, List) := (permutation, permutes) -> (
 
 
 
-actions = 2;
-fundDomain = 2;
+actions = 4;
+fundDomain = 3;
 
 file1 = openOut("coneSolutions.txt");
 file1 << "vertices: " << fundDomain << endl;
