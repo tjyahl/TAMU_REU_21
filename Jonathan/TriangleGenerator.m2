@@ -4,7 +4,7 @@ loadPackage("DecomposableSparseSystems")
 loadPackage("Monodromy",FileName=>"Monodromy.m2")
 
 k = 2
-for i in 0 .. 10000 do(
+for i in 0 .. 500 do(
 -- First, a random set of 3 matrices is generated with the 3rd row of the first 2 all 0's
     termNumber = {random(2,5),random(2,5),random(2,5)};
     A = {mutableMatrix(ZZ,k+1,termNumber_0),mutableMatrix(ZZ,k+1,termNumber_1),mutableMatrix(ZZ,k+1,termNumber_2)};
@@ -37,25 +37,22 @@ for i in 0 .. 10000 do(
     addedSupports =  drop(A,k);
     residualSupports = apply(addedSupports,S->S^(toList(k..numRows S - 1)));
     if not try isDecomposable residualSupports else true then (
-	
---    (F,sols) = solveDecomposableSystem(simpleA,,Software=>M2);
---    d = #sols;
---    (F,sols) = solveDecomposableSystem(residualSupports,,Software=>M2);
---    r = #sols;
     
-    d = mixedVolume {convexHull(simpleA_0),convexHull(simpleA_1)};
+    d = volume(convexHull(simpleA_0)+convexHull(simpleA_1)) - volume(convexHull(simpleA_0)) - volume(convexHull(simpleA_1));
     residualEntries = (entries(residualSupports_0))_0;
     r = max(residualEntries) - min(residualEntries);
     
     maxGaloisSize = (r!)^d*d!;
-    if maxGaloisSize > 1 then (
-    try (M = sparseMonodromy (A,Solver=>M2));
-    if not try M == null else false then(
-    monodromyLoop(M,10);
-    monodromySize = size(M);
---    if monodromySize <= (maxGaloisSize/2) then (outputs = append(outputs,{maxGaloisSize,monodromySize,A}));
-    if monodromySize <= (maxGaloisSize/2) then ("outputs.txt" << get "outputs.txt" << concatenate {toString(maxGaloisSize),", ",toString(monodromySize),", ",toString(i),", ",toString(A)} << endl << close);
-    ) else ("outputs.txt" << get "outputs.txt" << toString(A) << endl << close);
+    if d > 1 and r > 1 then (
+    monodromySize = {};
+    for j in 1 .. 5 do(
+    	try (M = sparseMonodromy (A,Solver=>M2));
+    	if not try M == null else false then(
+    	    monodromyLoop(M,10);
+    	    monodromySize = append(monodromySize,size(M));
+	);
+    );    
+    if max(monodromySize) <= (maxGaloisSize/2) then ("outputs.txt" << get "outputs.txt" << concatenate {toString(maxGaloisSize),", ",toString(max(monodromySize)),", ",toString(i),", ",toString(A)} << endl << close);
     );
     );
     );
@@ -63,22 +60,19 @@ for i in 0 .. 10000 do(
 
 -- Outputs gives a list of {index of system in outputMatrices, maxGaloisSize, monodromy output if maxGaloisSize<1000, -1 elsewise}
 
--- Ignore this part. I still need to update it.
-refinedOutputs = {}
-for system in outputs do(
-    A = system#2;
-    simpleA = {submatrix(A_0,{0,1},),submatrix(A_1,{0,1},)};
-    addedSupports = drop(A,k);
-    residualSupports = apply(addedSupports,S->S^(toList(k..numRows S - 1)));
-    (F,sols) = solveDecomposableSystem(simpleA,,Software=>M2);
-    d = #sols;
-    (F,sols) = solveDecomposableSystem(residualSupports,,Software=>M2);
-    r = #sols;
-    maxGaloisSize = (r!)^d*d!;
-    
-    M = sparseMonodromy (A,Solver=>M2);
-    monodromyLoop(M,10);
-    monodromySize = size(M);
-    if monodromySize <= (maxGaloisSize/2) then (outputs = append(outputs,{maxGaloisSize,monodromySize,A}));
+simpleA = {submatrix(A_0,{0,1},),submatrix(A_1,{0,1},)};
+addedSupports =  drop(A,k);
+residualSupports = apply(addedSupports,S->S^(toList(k..numRows S - 1)));
+d = volume(convexHull(simpleA_0)+convexHull(simpleA_1)) - volume(convexHull(simpleA_0)) - volume(convexHull(simpleA_1));
+residualEntries = (entries(residualSupports_0))_0;
+r = max(residualEntries) - min(residualEntries);
+maxGaloisSize = (r!)^d*d!;
+monodromySize = {};
+for j in 1 .. 5 do(
+    try (M = sparseMonodromy (A,Solver=>M2));
+    if not try M == null else false then(
+    	monodromyLoop(M,10);
+    	monodromySize = append(monodromySize,size(M));
+    );
 );
-refinedOutputs
+max(monodromySize) - maxGaloisSize
