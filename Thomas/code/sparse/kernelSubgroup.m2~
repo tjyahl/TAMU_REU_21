@@ -1,0 +1,4 @@
+--file to inspect the subgroup of the Galois group that fixes the blocks.
+restart
+loadPackage("Monodromy",FileName=>"../Monodromy.m2")
+loadPackage("Groups",FileName=>"../Groups.m2")

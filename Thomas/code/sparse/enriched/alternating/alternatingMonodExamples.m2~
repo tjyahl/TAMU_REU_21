@@ -1,0 +1,116 @@
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{-1,-1,1},{1,-1,-1}},matrix{{-1,1,1},{1,-1,1}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{-1,-1,0,1},{1,-1,0,-1}},matrix{{-1,1,1},{1,-1,1}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {2*matrix{{-1,0,2,3},{0,3,-1,2}},2*matrix{{0,1},{1,0}}*matrix{{-1,0,2,3},{0,3,-1,2}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{2,0,0,0},{0,2,0,0},{0,0,2,0}},matrix{{2,0,0,2},{0,2,0,2},{0,0,2,2}},matrix{{0,1,2,3},{0,2,1,3},{0,1,1,2}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{-1,-1,1,1},{-1,1,-1,1}},matrix{{0,1,2,3,4},{0,1,2,3,4}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{0,0,2},{0,2,0}},matrix{{0,1,2},{0,2,4}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{-1,-1,1},{-1,1,-1}},matrix{{-1,1},{1,-1}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{-1,-1,-1,-1,1,1,1,1},{-1,-1,1,1,-1,-1,1,1},{-1,1,-1,1,-1,1,-1,1}},matrix{{0,1,2,3,4},{-1,1,3,5,7},{0,0,0,0,0}},matrix{{0,3,4},{0,3,4},{0,6,8}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{-1,-1,1,1},{-1,1,-1,1},{0,0,0,0}},matrix{{-1,-1,1,1},{-1,1,-1,1},{0,0,0,0}},matrix{{0,0,0},{0,0,0},{0,1,2}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{-1,-1,1},{-1,1,-1},{0,0,0}},matrix{{-1,1,1},{1,1,-1},{0,0,0}},matrix{{0,0,0,0},{0,0,0,0},{0,1,2,3}}}
+T = randomMonod(A,30);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{0,0,4},{0,2,0}},matrix{{0,2,4},{0,1,2}}}
+T = randomMonod(A,100);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{0,0,2,2},{0,2,0,2}},matrix{{0,0,2},{0,2,0}}}
+T = randomMonod(A,20);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{0,1,1},{0,0,1},{0,0,0}},matrix{{0,2},{0,0},{0,0}},matrix{{0,0,0},{0,0,0},{0,1,2}}}
+T = randomMonod(A,50);
+printCycleTally T
+testAlternatingMonod T
+
+
+restart
+loadPackage("monod",Reload=>true)
+A = {matrix{{0,0,2,1},{0,2,0,1},{0,0,0,0}},matrix{{0,0,2,1},{0,2,0,1},{0,0,0,0}},matrix{{0,0,0},{0,0,0},{0,1,2}}}
+T = randomMonod(A,50);
+printCycleTally T
+testAlternatingMonod T
+
+loadPackage("Polyhedra",Reload=>true)
+P = sum (A/convexHull)
+vertices P
+M = first facets P
+sum(entries M,i->i)
