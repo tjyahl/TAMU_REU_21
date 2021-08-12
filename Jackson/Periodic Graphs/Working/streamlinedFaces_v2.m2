@@ -64,10 +64,30 @@ generateEdges (List, List) := (permutation, permutes) -> (
     return edges;
 )
 
+-- Takes a file name, list of edge numbers, list of cones, and list of dimensions and writes
+-- the edge list as well as all cones where the corresponding dimension is not -1 to the file.
+writeFile = method();
+writeFile (File, List, List, List) := (file, edges, cones, dims) -> () -> (
+    file << "Graph: " << edges << endl;
+    file << "Cones with solutions: " << endl;
+    temp = new List;
+    for j from 0 to length dims - 1 do ( 
+    	if dims_j != -1 then temp = append(temp, cones_j);
+    );
+    file << temp << endl;
+    temp = new List;
+    return true;
+)
+
+-- Takes the name of a file and closes it
+closeFile = method();
+closeFile (File) := (file) -> () -> (
+    file << close;
+    return true;
+)
 
 
-
-actions = 4;
+actions = 3;
 fundDomain = 3;
 
 file1 = openOut("coneSolutions.txt");
@@ -129,7 +149,6 @@ while counter < fundDomain do (
 currentPermutation = new MutableList;
 for i from 1 to actions - 1 do currentPermutation = append(currentPermutation, 0);
 currentPermutation = append(currentPermutation, 0); -- used to skip the case with all identity
-currentPermutaion = new MutableList from {0,1,5,5}; -- temporary for current calculation
 --Info = new List;
 
 specialization = new List;
@@ -197,20 +216,21 @@ while true do (
 	    	ROWS = entries coneListDF_i;
 	    	added = false;
 		
-	       
+	        -- checking to ensure that the non -1 dim is on peak or base
 	    	for j from 0 to length ROWS - 2 do (
 		    if sum(ROWS_j) != 0 then (
 		    	--faceSolutions = append(faceSolutions, {edgeList, coneListDF, dims});
 			
-			-- print result to a file
-    			file1 << "Graph: " << edgeList << endl;
-    			file1 << "Cones with solutions: " << endl;
-    			temp = new List;
-    			for j from 0 to length dims - 1 do (
-			    if dims_j != -1 then temp = append(temp, coneListDF_j);
-    			);
-    			file1 << temp << endl;
-			temp = new List;
+			-- print result to a file (includes a list of the cones with solutions)
+			schedule writeFile(file1, edgeList, coneListDF, dims);
+    			--file1 << "Graph: " << edgeList << endl;
+    			--file1 << "Cones with solutions: " << endl;
+    			--temp = new List;
+    			--for j from 0 to length dims - 1 do ( 
+			--    if dims_j != -1 then temp = append(temp, coneListDF_j);
+    			--);
+    			--file1 << temp << endl;
+			--temp = new List;
 
 		    	added = true;
 		    	break;
@@ -221,14 +241,15 @@ while true do (
 		    --faceSolutions = append(faceSolutions, edgeList);
 		    
 		    -- append results to a file
-		    file1 << "Graph: " << edgeList << endl;
-    		    file1 << "Cones with solutions: " << endl;
-    		    temp = new List;
-    		    for j from 0 to length dims - 1 do (
-			if dims_j != -1 then temp = append(temp, coneListDF_j);
-    		    );
-    		    file1 << temp << endl;
-		    temp = new List;
+		    schedule writeFile(file1, edgeList, coneListDF, dims);
+		    --file1 << "Graph: " << edgeList << endl;
+    		    --file1 << "Cones with solutions: " << endl;
+    		    --temp = new List;
+    		    --for j from 0 to length dims - 1 do (
+			--if dims_j != -1 then temp = append(temp, coneListDF_j);
+    		    --);
+    		    --file1 << temp << endl;
+		    --temp = new List;
 		    
 		    added = true;
 		    break;
@@ -246,7 +267,8 @@ while true do (
     );
 );
 
-file1 << close;
+schedule closeFile(file1);
+--file1 << close;
 file2 << close;
     
 

@@ -1,7 +1,0 @@
-vertices: 2
-actions: 3
-results:
-Graphs with face solutions:
-{{1, 4, 5, 8, 9, 12, 13}, {2, 3, 6, 7, 10, 11, 13}}
-Graphs without face solutions:
-{{1, 4, 5, 8, 10, 11, 13}, {1, 4, 6, 7, 10, 11, 13}}
