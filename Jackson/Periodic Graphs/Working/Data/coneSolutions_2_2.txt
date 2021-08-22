@@ -1,0 +1,8 @@
+vertices: 2
+actions: 2
+results: 
+Graph: {1, 4, 5, 8, 9}
+Cones with solutions: 
+{| -1 |, | 1  |, | -1 |, | 1  |, | 0 |}
+ | -1 |  | -1 |  | 1  |  | 1  |  | 0 |
+ | -1 |  | -1 |  | -1 |  | -1 |  | 1 |

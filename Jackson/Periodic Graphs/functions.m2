@@ -809,3 +809,122 @@ local Ra;
 
 
 
+AdjacentDensePeriodicMatrix2 = method(TypicalValue => List)
+AdjacentDensePeriodicMatrix2(ZZ,ZZ) := (Sequence) => (m,n)-> (
+     local edges; local toteEdges; local invFuncs; local toMatrixList, local toRowList; local zList; local outList; local outMatrix;
+     local curIndex;
+     local R;
+     local W;
+     local I;
+     local adjpoly;
+     local yirep;
+     invFuncs = {};
+     toteEdges = m*n*n + n*(n-1)//2;
+
+     R = QQ[x_1 .. x_m, z, y_1 .. y_m,zi, e_1 .. e_(toteEdges)];
+     for i from 1 to m do(
+    	invFuncs = append(invFuncs, x_i*y_i -1);	 
+	 );
+     invFuncs = append(invFuncs, z*zi-1);     
+     I = ideal (toSequence invFuncs);
+     toMatrixList = new MutableList;
+     zList = {};
+     for i from 0 to n-1 do(
+	 zList = append(zList, 0);
+	 );     
+     --make a double nested list so that we can convert this to a matrix later, make it nxn
+     for i from 1 to n do( -- declare like this so that all rows are unique objects
+	 toRowList = new MutableList;
+	 for j from 1 to n do (
+	 toRowList = append(toRowList, R_zList - R_zList);
+	 );
+	 toMatrixList = append(toMatrixList, toRowList);
+	 );       
+     --okay so lets iterate through each bipartite graph
+     --we will look at all the edges connected to a node one at a time, going through the nodes not part of the complete subgraph
+     -- this will require one loop to go through each bipartite graph and another loop to go through each node and another
+     --for the n edges on each node
+     --it will then require one more loop after these nested loops to account for the edges in the complete graph
+     
+     --yirep to represent y_i
+     yirep = new MutableList;
+     for i from 1 to m do(
+	 yirep = append(yirep,1_R);
+	 ); 
+     --need yirep in this way so can indentify y_i = adjpoly_i
+     for i from 0 to m-1 do(
+	 for j from 1 to m do(
+	     if ((i +1) != j) then(
+	          yirep#i = yirep#i* (x_j)_R;    
+		  );
+	     );
+	 );
+
+--for the rest need to still multiply by all terms, use adjpoly
+     adjpoly = 1_R;
+     for i from 1 to m do(
+	 adjpoly = adjpoly*(x_i)_R;
+	 ); 
+ 
+     for i from 1 to m do( --going through bipartite partitions
+	 curIndex = (i-1)*n*n + 1;
+	 for j from 0 to n-1 do( --going through nodes of a particular partition
+	     for k from 0 to n-1 do( --going through the edges
+		      if (j == k) then (
+	 		  toMatrixList#j#j = toMatrixList#j#j +  ((2 - x_i)*adjpoly - yirep#(i-1))*e_curIndex;
+			  curIndex =curIndex + 1;
+	 		  );
+		      if (j != k) then (
+     	     	         (toMatrixList#j)#j = (toMatrixList#j)#j + e_curIndex*adjpoly;
+		         (toMatrixList#k)#k = (toMatrixList#k)#k + e_curIndex*adjpoly;
+		         (toMatrixList#k)#j = (toMatrixList#k)#j - x_i*e_curIndex*adjpoly;
+		         (toMatrixList#j)#k = (toMatrixList#j)#k - yirep#(i-1)*e_curIndex;		      
+		 	  curIndex =curIndex + 1;
+			  );
+		 );
+	     );
+	 );          
+	 
+	  --need to remember to subtract from each diagonal by w
+     for j from 0 to n-1 do( --going through nodes of a particular partition
+	     for k from 0 to n-1 do( --going through the edges
+		      if (j == k) then (
+	 		  toMatrixList#j#j = toMatrixList#j#j - z*adjpoly;
+	 		  );
+		 );
+	     );
+     -- also need to finally remember to account for the edges in the complete graph of nodes (accounts for current bug)
+      for j from 0 to n-1 do( --
+	     for k from 0 to n-1 do(  --only want hit edges once, we can do this by only considering increasing pairs
+		      if (j < k) then (
+	 		 (toMatrixList#j)#j = (toMatrixList#j)#j + e_curIndex*adjpoly;
+		         (toMatrixList#k)#k = (toMatrixList#k)#k + e_curIndex*adjpoly;
+		         (toMatrixList#k)#j = (toMatrixList#k)#j - e_curIndex*adjpoly;
+		         (toMatrixList#j)#k = (toMatrixList#j)#k - e_curIndex*adjpoly;		      
+		 	  curIndex =curIndex + 1;
+	 		  );
+		 );
+	     );   
+     
+     
+	 
+	 for j from 0 to n-1 do (
+	 toMatrixList#j = new List from toMatrixList#j;
+	 );    
+    
+     toMatrixList = new List from toMatrixList;
+     outMatrix = matrix(toMatrixList);
+     
+--     stdio << theideals;
+--     stdio << dims;
+--     stdio << degs;
+local DF;
+local Ra;
+    DF = {};    
+    DF = append(DF, sub(det(outMatrix,Strategy => Cofactor),R));
+    for i from 1 to m do (
+    DF = append(DF,(diff(x_i, DF_0)));
+    );
+     Ra = QQ[x_1 .. x_m,z, y_1 .. y_m,zi];
+     return (outMatrix,R,I,Ra,DF)
+     )

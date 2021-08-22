@@ -16,7 +16,6 @@ getExponents (Thing, ZZ) := (f, actions) -> (
 	for j from 0 to actions - 1 do (
 	    l = append(l, E_i_j - E_i_(j + actions));
 	);
-    	l = append(l, E_i_(actions*2));
 	L = append(L, l);
     );
     L = unique L;
@@ -68,37 +67,59 @@ generateEdges (List, List) := (permutation, permutes) -> (
 
 
 actions = 4;
-fundDomain = 3;
+fundDomain = 2;
 
-file1 = openOut("coneSolutions.txt");
+-- setting up output files
+outputString = "Data/coneSolutions_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
+file1 = openOut(outputString);
 file1 << "vertices: " << fundDomain << endl;
 file1 << "actions: " << actions << endl;
 file1 << "results: " << endl;
 file1 << close;
-file1 = openOutAppend("coneSolutions.txt");
+file1 = openOutAppend(outputString);
 
-file2 = openOut("noConeSolutions.txt");
+outputString = "Data/noConeSolutions_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
+file2 = openOut(outputString);
 file2 << "vertices: " << fundDomain << endl;
 file2 << "actions: " << actions << endl;
 file2 << "results: " << endl;
 file2 << close;
-file2 = openOutAppend("noConeSolutions.txt");
+file2 = openOutAppend(outputString);
 
 
 
 -- sets up the original representation of the graph and solves for the number of solutions
-DenseGraph = AdjacentDensePeriodicMatrix(actions, fundDomain);
+DenseGraph = AdjacentDensePeriodicMatrix2(actions, fundDomain);
 DF = DenseGraph_4;
 
-Generators = new Array from take(gens DenseGraph_1, actions*2 + 1);
-
+Generators = new Array from take(gens DenseGraph_1, actions*2 + 2);
 Z = (ZZ/2039) Generators;
+tempIdealGenerators = first entries generators DenseGraph_2;
 
 -- determines the number of edges in the graph
-numEdges = numgens DenseGraph_1 - actions*2 - 1;
+numEdges = numgens DenseGraph_1 - actions*2 - 2;
 
+-- Used to create an ideal of Z that implies that the x_i's and z must be nonzero
+converter = new List;
+for i from 1 to actions do (
+    converter = append(converter, x_i);
+);
+for i from 1 to actions do (
+    converter = append(converter, y_i);
+);
+converter = append(converter, z);
+for i from 1 to numEdges do (
+    converter = append(converter, 0);
+);
+convert = map(Z, DenseGraph_1, converter);
 
+idealGenerators = new List;
+for i from 0 to length tempIdealGenerators - 1 do (
+    idealGenerators = append(idealGenerators, convert(tempIdealGenerators_i));
+);
+idealGenerators = append(idealGenerators, z*zi - 1);
 
+I = ideal(idealGenerators);
 
 -- generates all the permutations of fundDomain elements and counts them actions number of times
 permutes = new List;
@@ -128,27 +149,23 @@ while counter < fundDomain do (
 
 currentPermutation = new MutableList;
 for i from 1 to actions - 1 do currentPermutation = append(currentPermutation, 0);
-currentPermutation = append(currentPermutation, 0); -- used to skip the case with all identity
-currentPermutaion = new MutableList from {0,1,5,5}; -- temporary for current calculation
---Info = new List;
+currentPermutation = append(currentPermutation, 0); -- used to skip the case with all identity (change 0 to 1)
+
 
 specialization = new List;
 for i from 1 to actions do (
     specialization = append(specialization, x_i);
 )
+specialization = append(specialization, z);
 for i from 1 to actions do (
     specialization = append(specialization, y_i);
 )
-specialization = append(specialization, z);
+specialization = append(specialization, zi);
 a = new List;
 for i from 1 to numEdges do (
     a = append(a, random(2037) + 1);
 )
 
---faceSolutions = new List;
---noFaceSolutions = new List;
-
---currentPermutation = new MutableList from {4,5,5};
 -- loop through all combinations of permutations
 while true do (
     try currentPermutation == false then break else (
@@ -167,41 +184,36 @@ while true do (
 	specMap = map(Z, DenseGraph_1, specialization | currentSpecialization);
 	-- set up the operator
 	DFs = apply(DF, n -> specMap(n));
-	DFsN = apply(DFs, n -> convexHull transpose matrix getExponents(n, actions));
+	DFsN = apply(DFs, n -> convexHull transpose matrix getExponents(n, actions + 1));
 	
 	
 	-- get the corresponding faces
 	DFan = normalFan DFsN_0;
 	coneListDF = coneList(DFan);
-	sysDF = apply(DFs, n -> apply(coneListDF, m -> getFaceFunc(m, n, 1)));
+	sysDF = apply(DFs, n -> apply(coneListDF, m -> getFaceFunc(m, n, 0))); -- error: Vectors not of equal length nerd
 	
 	
 	
 	-- loop through the faces and check dimension/degree. Record the graph if dim != -1 and deg != 0
 	theIdeals = new List;
 	dims = new List;
-	degs = new List;
+	--degs = new List;
 	for i from 0 to length coneListDF - 1 do (
 	    theList = new List;
 	    for j from 0 to actions do (
-		theList = append(theList, (sysDF_j)_i); -- program fails at this line
+		theList = append(theList, (sysDF_j)_i); 
 	    );
-	    theIdeals = append(theIdeals, (ideal theList) + (specMap DenseGraph_2));
+	    theIdeals = append(theIdeals, (ideal theList) + (specMap DenseGraph_2)); -- ask about this line as well
 	    dims = append(dims, dim theIdeals_i);
-	    degs = append(degs, degree theIdeals_i);
-	);
-	--Info = append(Info, {coneListDF, dims, degs, edgeList});
+	    --degs = append(degs, degree theIdeals_i);
+	);	
     	-- checks that dimensions are all -1 for any face that is not the apex or base
+	added = false;
         for i from 0 to length dims - 1 do (
 	    if dims_i != -1 then (
 	    	ROWS = entries coneListDF_i;
-	    	added = false;
-		
-	       
 	    	for j from 0 to length ROWS - 2 do (
 		    if sum(ROWS_j) != 0 then (
-		    	--faceSolutions = append(faceSolutions, {edgeList, coneListDF, dims});
-			
 			-- print result to a file
     			file1 << "Graph: " << edgeList << endl;
     			file1 << "Cones with solutions: " << endl;
@@ -218,8 +230,6 @@ while true do (
 	    	);
 	        if added then break;
 	    	if sum(ROWS_(length ROWS - 1)) == 0 then (
-		    --faceSolutions = append(faceSolutions, edgeList);
-		    
 		    -- append results to a file
 		    file1 << "Graph: " << edgeList << endl;
     		    file1 << "Cones with solutions: " << endl;
@@ -234,54 +244,25 @@ while true do (
 		    break;
 	    	);
 	        if added then break;
-	    	if not added then (
-		    --noFaceSolutions = append(noFaceSolutions, edgeList);
-		    
-		    file2 << edgeList << endl;
-		    break;
-	    	);
 	    );
     	);
+	if not added then (
+		-- place in noConeSolutions.txt
+		file2 << edgeList << endl;
+	);
 	currentPermutation = nextPermutation(currentPermutation, actions, length permutes);
     );
 );
 
 file1 << close;
 file2 << close;
+
+
+
+
+
     
 
---file = openOutAppend("coneSolutions.txt");
---file << "vertices: " << fundDomain << endl;
---file << "actions: " << actions << endl;
---file << "results: " << endl;
-
-
---conesWSolutions = new List;
---for i from 0 to length faceSolutions - 1 do (
---    file << "Graph: " << faceSolutions_i_0 << endl;
---    file << "Cones with solutions: " << endl;
---    temp = new List;
---    for j from 0 to length faceSolutions_i_2 - 1 do (
---	if faceSolutions_i_2_j != -1 then temp = append(temp, faceSolutions_i_1_j);
---    );
---   conesWSolutions = append(conesWSolutions, temp);
---    file << temp << endl;
---)
-
---file << close;
-
---file = openOutAppend("noConeSolutions.txt");
---file << noFaceSolutions << endl;
---file << close;
-
-
-
--- The binary representation is as follows: the nth bit (starting from the 0th) is 1 if and only
--- if the edge e_(n+1) is included in the graph. After printing in the manner above, the nth entry in 
--- the view array is 1 if and only if the graph contains the edge e_(n+1). The edges are assigned by
--- numbering the vertices in the fundamental domain v_1 through v_n. Then the edge from v_i to x_k v_j
--- is given by e_((k-1)*n^2 + n*(i-1) + j). The last C(n,2) edges make up the complete graph of the 
--- fundamental domain.
 
 
 

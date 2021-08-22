@@ -1,0 +1,5 @@
+vertices: 2
+actions: 2
+results: 
+{1, 4, 6, 7, 9}
+{2, 3, 6, 7, 9}
