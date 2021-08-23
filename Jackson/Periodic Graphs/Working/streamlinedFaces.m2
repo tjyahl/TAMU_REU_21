@@ -66,8 +66,8 @@ generateEdges (List, List) := (permutation, permutes) -> (
 
 
 
-actions = 4;
-fundDomain = 2;
+actions = 3;
+fundDomain = 3;
 
 -- setting up output files
 outputString = "Data/coneSolutions_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
