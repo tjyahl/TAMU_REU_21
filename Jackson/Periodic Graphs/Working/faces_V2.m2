@@ -63,66 +63,6 @@ generateEdges (List, List) := (permutation, permutes) -> (
     return edges;
 )
 
--- Takes the current permutation for the actions, the list of permutations, and the number of vertices in the fundamental domain
--- and checks that no two permutations in the current list map the same vertex to itself. This would create
--- solutions on a facet of the newton polytope.
-checkSameMapping = method();
-checkSameMapping (List, List, ZZ) := (currentPermutation, permutationList, numVertices) -> (
-	local nochange;
-	for i from 1 to numVertices do (
-		noChange = 0;
-		for j from 0 to length currentPermutation - 1 do (
-			if permutationList#(currentPermutation#j)#(i - 1) == i then noChange = noChange + 1;
-			-- if at any point two permutations fix the same number, return true
-			if noChange >= 2 then return true;
-		);
-	);
-	return false;
-)
-
--- Takes a list that has the numbers 1 - n that represents a permutation by sending i to list#(i - 1)
--- returns the list that represents the inverse permutation in the same manner.
-inversePermute = method();
-inversePermute (List) := (permutation) -> (
-	local newPermute;
-	newPermute = new MutableList;
-	for i from 0 to length permutation - 1 do (
-		newPermute#(permutation#i - 1) = i + 1;
-	);
-	return new List from newPermute;
-)
-
-
--- Given a current graph, and a list of permutations, returns true if three of {permutation,permutation^-1}
--- for each permutation on the given graph map a given number to the same output number. If more speed is needed,
--- can change to take a list of inverse permutations so that they don't have to be calculated repeatedly.
-checkThreeMap = method();
-checkThreeMap (List, List) := (currentGraph, Permutations) ->(
-	local iBucket; local numVertices; local currentInverse;
-	numVertices = length(Permutations#0);
-	for i from 0 to numVertices - 1 do (
-		iBucket = new MutableList;
-		for j from 0 to numVertices - 1 do (
-			iBucket#j = 0;
-		);
-		for j from 0 to length currentGraph - 1 do (
-			currentInverse = inversePermute(Permutations#(currentGraph#j));
-			iBucket#(Permutations#(currentGraph#j)#i - 1) = iBucket#(Permutations#(currentGraph#j)#i - 1) + 1;
-			if not(currentInverse#i == Permutations#(currentGraph#j)#i) then (
-				iBucket#(currentInverse#i - 1) = iBucket#(currentInverse#i - 1) + 1;
-			); 
-		);
-		iBucket = new List from iBucket;
-		for j from 0 to length iBucket - 1 do (
-			if iBucket#j >= 3 then (
-				return true;
-			);
-		);
-	);
-	return false;
-)
-
-
 
 
 
@@ -229,11 +169,6 @@ for i from 1 to numEdges do (
 -- loop through all combinations of permutations
 while true do (
     try currentPermutation == false then break else (
-	if checkSameMapping(new List from currentPermutation, permutes, fundDomain) or checkThreeMap(new List from currentPermutation, permutes) then (
-		-- maybe add to an output file here or after edges are generated.
-		currentPermutation = nextPermutation(currentPermutation, actions, length permutes);
-		continue;
-	);
 	edgeList = generateEdges(new List from currentPermutation, permutes);
 	j = 0;
 	currentSpecialization = new List;
