@@ -123,6 +123,27 @@ checkThreeMap (List, List) := (currentGraph, Permutations) ->(
 )
 
 
+--Computes the cycle type of a permutation given in list form.
+cycleType = method()
+cycleType (List) := String => P->(
+    cType := {};
+    L := toList(1 .. #P);
+    while (#L>0) do (
+	len := 1;
+	i := first L;
+	while (P#(i-1) != first L) do (
+	    L = delete(P#(i-1),L);
+            i = P#(i-1);
+	    len = len + 1
+	    );
+	L = drop(L,1);
+	cType = append(cType,len)
+	);
+    return sort cType;
+)
+
+
+
 
 
 
@@ -210,6 +231,7 @@ while counter < fundDomain do (
 currentPermutation = new MutableList;
 for i from 1 to actions - 1 do currentPermutation = append(currentPermutation, 0);
 currentPermutation = append(currentPermutation, 0); -- used to skip the case with all identity (change 0 to 1)
+currentPermutation = new MutableList from {1,2,4,4};
 
 
 specialization = new List;
@@ -321,3 +343,8 @@ while true do (
 
 file1 << close;
 file2 << close;
+
+
+
+
+
