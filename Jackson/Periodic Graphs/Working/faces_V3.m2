@@ -147,7 +147,7 @@ cycleType (List) := String => P->(
 
 
 
-actions = 2;
+actions = 3;
 fundDomain = 4;
 
 -- setting up output files
@@ -320,8 +320,4 @@ while true do (
 
 file1 << close;
 file2 << close;
-
-
-
-
 

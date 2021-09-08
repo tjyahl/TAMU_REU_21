@@ -124,7 +124,7 @@ checkThreeMap (List, List) := (currentGraph, Permutations) ->(
 
 
 --Computes the cycle type of a permutation given in list form.
-cycleType = method()
+cycleType = method();
 cycleType (List) := String => P->(
     cType := {};
     L := toList(1 .. #P);
@@ -142,13 +142,35 @@ cycleType (List) := String => P->(
     return sort cType;
 )
 
+-- Takes a list of permutations and returns a new list that contains a subset of 
+-- those permutations without any repeated cycle types
+pruneCycleTypes = method();
+pruneCycleTypes (List) := (permutationList) -> (
+	local prunedList; local foundCycles; local added; local currentCycle;
+	prunedList = new List;
+	foundCycles = new List;
+	added = false;
+	for i from 0 to length permutationList - 1 do (
+		added = false;
+		currentCycle = cycleType(permutationList#i);
+		for j from 0 to length foundCycles - 1 do (
+			if currentCycle == foundCycles#j then(
+				added = true;
+				break;
+			);
+		);
+		if not added then (
+			foundCycles = append(foundCycles, currentCycle);
+			prunedList = append(prunedList, permutationList#i);
+		);
+	);
+	return prunedList;
+)
 
 
 
-
-
-actions = 2;
-fundDomain = 4;
+actions = 3;
+fundDomain = 3;
 
 -- setting up output files
 outputString = "Data/coneSolutions_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
@@ -205,6 +227,8 @@ while counter < fundDomain do (
 	counter = counter + 1;
     );
 );
+
+permutes = pruneCycleTypes(permutes);
 
 currentPermutation = new MutableList;
 for i from 1 to actions - 1 do currentPermutation = append(currentPermutation, 0);
@@ -320,8 +344,5 @@ while true do (
 
 file1 << close;
 file2 << close;
-
-
-
 
 
