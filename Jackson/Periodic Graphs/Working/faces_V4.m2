@@ -169,8 +169,8 @@ pruneCycleTypes (List) := (permutationList) -> (
 
 
 
-actions = 3;
-fundDomain = 3;
+actions = 2;
+fundDomain = 5;
 
 -- setting up output files
 outputString = "Data/coneSolutions_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
