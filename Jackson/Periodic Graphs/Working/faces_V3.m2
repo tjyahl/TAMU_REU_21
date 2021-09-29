@@ -147,8 +147,8 @@ cycleType (List) := String => P->(
 
 
 
-actions = 5;
-fundDomain = 3;
+actions = 3;
+fundDomain = 4;
 
 -- setting up output files
 outputString = "Data/coneSolutions_" | toString(fundDomain) | "_" | toString(actions) | ".txt";

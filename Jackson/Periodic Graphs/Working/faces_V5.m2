@@ -142,25 +142,53 @@ cycleType (List) := String => P->(
     return sort cType;
 )
 
--- Prunes the target list of repeated dimensional cones
+-- Checks if a given element is in the given list
+isIn = method();
+isIn (Thing, List) := (element, givenList) -> (
+	for i from 0 to length givenList - 1 do (
+		if element == givenList#i then return true;
+	);
+	return false;
+)
+
+
+-- Prunes the target list of cones until it contains only one cone
+-- representing each facet of a newton polytope
+-- (currently assumes it contains a cone for each dimension between 1 and n for some n
+-- this may not be the case and it can skip some numbers. Need to fix this. Also needs
+-- to take one cone of each dimension that has the last entry as 1,-1, and 0).
 pruneCones = method();
 pruneCones (List) := (coneList) -> (
-     local newList; local i; local proceed;
-     newList = new List;
-     i = 0;
-     proceed = true;
-     while proceed do (
-	 proceed = false;
-	 i = i + 1;
-	 for j from 0 to length coneList - 1 do (
-	     if numgens source coneList#j == i then (
-		 newList = append(newList, coneList#j);
-		 proceed = true;
-		 break;
-	     );
-	 );
-     );
-     return newList;
+	local dimList; local newList; local neg; local pos; local zer;
+	newList = new List;
+	dimList = new List;
+	for i from 0 to length coneList - 1 do (
+		if not isIn(numgens source coneList#i, dimList) then (
+			dimList = append(dimList, numgens source coneList#i);
+		);
+	);
+	
+	for i from 0 to length dimList - 1 do (
+		neg = false;
+		pos = false;
+		zer = false;
+		for j from 0 to length coneList - 1 do (
+			if numgens source coneList#j == dimList#i then (
+				if (not neg and ((coneList#j)_((numgens target coneList#j - 1),(numgens source coneList#j - 1))) < 0) then (
+					neg = true;
+					newList = append(newList, coneList#j);
+				) else if (not pos and ((coneList#j)_((numgens target coneList#j - 1),(numgens source coneList#j - 1))) > 0) then (
+					pos = true;
+					newList = append(newList, coneList#j);
+				) else if (not zer and ((coneList#j)_((numgens target coneList#j - 1),(numgens source coneList#j - 1))) == 0) then (
+					zer = true;
+					newList = append(newList, coneList#j);
+				);
+			);
+		);
+	);
+	
+	return newList;
 )
 
 
