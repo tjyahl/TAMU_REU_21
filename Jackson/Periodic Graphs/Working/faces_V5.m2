@@ -159,7 +159,7 @@ isIn (Thing, List) := (element, givenList) -> (
 -- to take one cone of each dimension that has the last entry as 1,-1, and 0).
 pruneCones = method();
 pruneCones (List) := (coneList) -> (
-	local dimList; local newList; local neg; local pos; local zer;
+	local dimList; local newList; local neg; local pos; local zer; local val;
 	newList = new List;
 	dimList = new List;
 	for i from 0 to length coneList - 1 do (
@@ -174,13 +174,17 @@ pruneCones (List) := (coneList) -> (
 		zer = false;
 		for j from 0 to length coneList - 1 do (
 			if numgens source coneList#j == dimList#i then (
-				if (not neg and ((coneList#j)_((numgens target coneList#j - 1),(numgens source coneList#j - 1))) < 0) then (
+				val = 1;
+				for k from 0 to numgens target coneList#j - 1 do (
+					val = val * (coneList#j)_((k),(numgens source coneList#j - 1));
+				);
+				if (not neg and val < 0) then (
 					neg = true;
 					newList = append(newList, coneList#j);
-				) else if (not pos and ((coneList#j)_((numgens target coneList#j - 1),(numgens source coneList#j - 1))) > 0) then (
+				) else if (not pos and val > 0) then (
 					pos = true;
 					newList = append(newList, coneList#j);
-				) else if (not zer and ((coneList#j)_((numgens target coneList#j - 1),(numgens source coneList#j - 1))) == 0) then (
+				) else if (not zer and val == 0) then (
 					zer = true;
 					newList = append(newList, coneList#j);
 				);
@@ -328,6 +332,12 @@ while true do (
 		    if sum(ROWS_j) != 0 then (
 			-- print result to a file
     			file1 << "Graph: " << edgeList << endl;
+			printList = new List from currentPermutation;
+		    	file1 << "{" << permutes#0;
+		    	for j from 1 to length printList - 1 do(
+		    		file1 << "," << permutes#(printList#j);
+		    	);
+		    	file1 << "}" << endl;
     			file1 << "Cones with solutions: " << endl;
     			temp = new List;
     			for j from 0 to length dims - 1 do (
@@ -343,7 +353,13 @@ while true do (
 	        if added then break;
 	    	if sum(ROWS_(length ROWS - 1)) == 0 then (
 		    -- append results to a file
-		    file1 << "Graph: " << edgeList << endl;
+		    file1 << "Graph: ";
+		    printList = new List from currentPermutation;
+		    file1 << "{" << permutes#0;
+		    for j from 1 to length printList - 1 do(
+		    	file1 << "," << permutes#(printList#j);
+		    );
+		    file1 << "}" << endl;
     		    file1 << "Cones with solutions: " << endl;
     		    temp = new List;
     		    for j from 0 to length dims - 1 do (
@@ -360,7 +376,12 @@ while true do (
     	);
 	if not added then (
 		-- place in noConeSolutions.txt
-		file2 << edgeList << endl;
+		printList = new List from currentPermutation;
+		file2 << "{" << permutes#0;
+		for j from 1 to length printList - 1 do(
+			file2 << "," << permutes#(printList#j);
+		);
+		file2 << "}" << endl;
 	);
 	currentPermutation = nextPermutation(currentPermutation, actions, length permutes);
     );

@@ -1,0 +1,131 @@
+vertices: 2
+actions: 2
+results: 
+edgeList: {1, 6, 7}
+polytopeVolume: 24
+Cones with solutions: 
+{| 0 |, | -2 -2 |, | 2  2 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {4, 6, 7}
+polytopeVolume: 24
+Cones with solutions: 
+{| 0 |, | -2 -2 |, | 2  2 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {1, 4, 6, 7}
+polytopeVolume: 32
+no solutions
+
+edgeList: {1, 6, 9}
+polytopeVolume: 12
+Cones with solutions: 
+{| 0 |, | -1 -1 |, | 1  1 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {4, 6, 9}
+polytopeVolume: 12
+Cones with solutions: 
+{| 0 |, | -1 -1 |, | 1  1 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {1, 4, 6, 9}
+polytopeVolume: 16
+no solutions
+
+edgeList: {1, 7, 9}
+polytopeVolume: 12
+Cones with solutions: 
+{| 0 |, | -1 -1 |, | 1  1 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {4, 7, 9}
+polytopeVolume: 12
+Cones with solutions: 
+{| 0 |, | -1 -1 |, | 1  1 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {1, 4, 7, 9}
+polytopeVolume: 16
+no solutions
+
+edgeList: {1, 6, 7, 9}
+polytopeVolume: 24
+Cones with solutions: 
+{| 0 |, | -2 -2 |, | 2  2 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {4, 6, 7, 9}
+polytopeVolume: 24
+Cones with solutions: 
+{| 0 |, | -2 -2 |, | 2  2 |}
+ | 0 |  | -1 1  |  | -1 1 |
+ | 1 |  | 0  0  |  | 0  0 |
+
+edgeList: {1, 4, 6, 7, 9}
+polytopeVolume: 32
+no solutions
+
+edgeList: {2, 3, 6}
+polytopeVolume: 24
+no solutions
+
+edgeList: {2, 3, 7}
+polytopeVolume: 24
+no solutions
+
+edgeList: {2, 6, 7}
+polytopeVolume: 24
+no solutions
+
+edgeList: {3, 6, 7}
+polytopeVolume: 24
+no solutions
+
+edgeList: {2, 3, 6, 7}
+polytopeVolume: 32
+no solutions
+
+edgeList: {2, 6, 9}
+polytopeVolume: 12
+no solutions
+
+edgeList: {3, 6, 9}
+polytopeVolume: 12
+no solutions
+
+edgeList: {2, 3, 6, 9}
+polytopeVolume: 24
+no solutions
+
+edgeList: {2, 7, 9}
+polytopeVolume: 12
+no solutions
+
+edgeList: {3, 7, 9}
+polytopeVolume: 12
+no solutions
+
+edgeList: {2, 3, 7, 9}
+polytopeVolume: 24
+no solutions
+
+edgeList: {2, 6, 7, 9}
+polytopeVolume: 24
+no solutions
+
+edgeList: {3, 6, 7, 9}
+polytopeVolume: 24
+no solutions
+
+edgeList: {2, 3, 6, 7, 9}
+polytopeVolume: 32
+no solutions
+

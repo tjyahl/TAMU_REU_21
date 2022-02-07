@@ -1,5 +1,5 @@
 restart
-load("../functions.m2")
+load("/mnt/c/Users/Jackson/Documents/GitHub/TAMU_REU_21/Jackson/Periodic Graphs/functions.m2")
 --load("Graphs.m2") -- will need to remove if "faces", "facets", "isPure", "fVector", "skeleton",
 -- "vertices", or "directProduct" as they appear in both Graphs.m2 and functions.m2
 
@@ -43,7 +43,7 @@ isSubgraph (ZZ, ZZ) := (a, b) -> (
     if (a & b) == a then return true else return false;
 )
 
-actions = 3;
+actions = 2;
 fundDomain = 2;
 
 
@@ -100,7 +100,7 @@ for i from 1 to numEdges do (
 	    -- if the bit is 0 specialize the corresponding edge to 0
 	    if getBit(gSet, j) != 1 then (
 		curDet = sub(curDet, e_(j + 1)=>0);
-	    )
+	    );
 	);
     
     	-- represents the graph with a number whose bit representation tells which edges are included
