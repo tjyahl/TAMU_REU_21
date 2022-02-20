@@ -1,0 +1,283 @@
+vertices: 2
+actions: 3
+results: 
+edgeList: {1, 6, 7, 10}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {4, 6, 7, 10}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {1, 4, 6, 7, 10}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 6, 7, 11}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {4, 6, 7, 11}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {1, 4, 6, 7, 11}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 6, 10, 11}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {4, 6, 10, 11}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {1, 4, 6, 10, 11}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 7, 10, 11}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {4, 7, 10, 11}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {1, 4, 7, 10, 11}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 6, 7, 10, 11}
+polytopeVolume: 96
+Cones with solutions: 
+{| 0 |, | -2 -2 -2 -2 |, | 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  |  | -1 1  -1 1 |
+ | 0 |  | -1 -1 1  1  |  | -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  |  | 0  0  0  0 |
+
+edgeList: {4, 6, 7, 10, 11}
+polytopeVolume: 96
+Cones with solutions: 
+{| 0 |, | -2 -2 -2 -2 |, | 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  |  | -1 1  -1 1 |
+ | 0 |  | -1 -1 1  1  |  | -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  |  | 0  0  0  0 |
+
+edgeList: {1, 4, 6, 7, 10, 11}
+polytopeVolume: 128
+no solutions
+
+edgeList: {1, 6, 10, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1 |}
+ | 0 |  | -1 1  0  -1 0  1  |  | -1 1 0  -1 0 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0 |
+
+edgeList: {4, 6, 10, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1 |}
+ | 0 |  | -1 1  0  -1 0  1  |  | -1 1 0  -1 0 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0 |
+
+edgeList: {1, 4, 6, 10, 13}
+polytopeVolume: 48
+no solutions
+
+edgeList: {1, 7, 10, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1  |}
+ | 0 |  | -1 1  0  1  0  -1 |  | -1 1 0  1  0 -1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1  |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0  |
+
+edgeList: {4, 7, 10, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1  |}
+ | 0 |  | -1 1  0  1  0  -1 |  | -1 1 0  1  0 -1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1  |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0  |
+
+edgeList: {1, 4, 7, 10, 13}
+polytopeVolume: 48
+no solutions
+
+edgeList: {1, 6, 7, 10, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {4, 6, 7, 10, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {1, 4, 6, 7, 10, 13}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 6, 11, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1  |}
+ | 0 |  | -1 1  0  1  0  -1 |  | -1 1 0  1  0 -1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1  |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0  |
+
+edgeList: {4, 6, 11, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1  |}
+ | 0 |  | -1 1  0  1  0  -1 |  | -1 1 0  1  0 -1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1  |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0  |
+
+edgeList: {1, 4, 6, 11, 13}
+polytopeVolume: 48
+no solutions
+
+edgeList: {1, 7, 11, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1 |}
+ | 0 |  | -1 1  0  -1 0  1  |  | -1 1 0  -1 0 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0 |
+
+edgeList: {4, 7, 11, 13}
+polytopeVolume: 36
+Cones with solutions: 
+{| 0 |, | -1 -1 -1 -1 -1 -1 |, | 1  1 1  1  1 1 |}
+ | 0 |  | -1 1  0  -1 0  1  |  | -1 1 0  -1 0 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1 1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0 0 |
+
+edgeList: {1, 4, 7, 11, 13}
+polytopeVolume: 48
+no solutions
+
+edgeList: {1, 6, 7, 11, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {4, 6, 7, 11, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -2 -2 -1 -2 -2 |, | 1  2  2  1 2  2 |}
+ | 0 |  | 0  -1 1  0  -1 1  |  | 0  -1 1  0 -1 1 |
+ | 0 |  | -1 -1 -1 1  1  1  |  | -1 -1 -1 1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0  0  0 0  0 |
+
+edgeList: {1, 4, 6, 7, 11, 13}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 6, 10, 11, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {4, 6, 10, 11, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {1, 4, 6, 10, 11, 13}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 7, 10, 11, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {4, 7, 10, 11, 13}
+polytopeVolume: 72
+Cones with solutions: 
+{| 0 |, | -1 -1 -2 -2 -2 -2 |, | 1  1 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  -1 1  |  | -1 1 -1 1  -1 1 |
+ | 0 |  | 0  0  -1 -1 1  1  |  | 0  0 -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  0  0  |  | 0  0 0  0  0  0 |
+
+edgeList: {1, 4, 7, 10, 11, 13}
+polytopeVolume: 96
+no solutions
+
+edgeList: {1, 6, 7, 10, 11, 13}
+polytopeVolume: 96
+Cones with solutions: 
+{| 0 |, | -2 -2 -2 -2 |, | 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  |  | -1 1  -1 1 |
+ | 0 |  | -1 -1 1  1  |  | -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  |  | 0  0  0  0 |
+
+edgeList: {4, 6, 7, 10, 11, 13}
+polytopeVolume: 96
+Cones with solutions: 
+{| 0 |, | -2 -2 -2 -2 |, | 2  2  2  2 |}
+ | 0 |  | -1 1  -1 1  |  | -1 1  -1 1 |
+ | 0 |  | -1 -1 1  1  |  | -1 -1 1  1 |
+ | 1 |  | 0  0  0  0  |  | 0  0  0  0 |
+
+edgeList: {1, 4, 6, 7, 10, 11, 13}
+polytopeVolume: 128
+no solutions
+

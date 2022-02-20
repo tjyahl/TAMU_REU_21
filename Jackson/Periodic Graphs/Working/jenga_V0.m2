@@ -175,8 +175,8 @@ cycleType (List) := String => P->(
     return sort cType;
 )
 
-actions = 2;
-fundDomain = 2;
+actions = 3;
+fundDomain = 3;
 
 -- setting up output files
 outputString = "Data/jengaInfo_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
@@ -218,7 +218,7 @@ for i from 1 to numEdges do (
 )
 
 -- reads in the contents of a file (hopefully containing just a list)
-file2 = openIn("jengaInput.txt");
+file2 = openIn("jengaInput_3_3.txt");
 startEdgeList = value(read(file2));
 for l from 0 to length startEdgeList - 1 do (
 	numSubgraphs = 2^(length startEdgeList_l);
