@@ -175,8 +175,24 @@ cycleType (List) := String => P->(
     return sort cType;
 )
 
-actions = 3;
-fundDomain = 3;
+-- Computes the hessian of a given polynomial with a given number of actions
+Hessian = method()
+Hessian (Thing, ZZ) := (func, actions) -> (
+	rows = new List;
+	for i from 1 to actions do (
+		row = new List;
+		for j from 1 to actions do (
+			row = append(row, diff(x_i, diff(x_j, func)));
+		);
+		rows = append(rows, row);
+	);
+	
+	return determinant(matrix(rows));
+)
+
+
+actions = 2;
+fundDomain = 2;
 
 -- setting up output files
 outputString = "Data/jengaInfo_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
@@ -218,7 +234,7 @@ for i from 1 to numEdges do (
 )
 
 -- reads in the contents of a file (hopefully containing just a list)
-file2 = openIn("jengaInput_3_3.txt");
+file2 = openIn("jengaInput_2_2.txt");
 startEdgeList = value(read(file2));
 for l from 0 to length startEdgeList - 1 do (
 	numSubgraphs = 2^(length startEdgeList_l);
@@ -272,7 +288,19 @@ for l from 0 to length startEdgeList - 1 do (
 		
 		coneListDF = coneList(DFan); -- does not return the correct number of cones. Issue in the function is that cones(i, curFan) returns a list containing an empty list.
 		sysDF = apply(DFs, n -> apply(coneListDF, m -> getFaceFunc(m, n, 0)));
-	
+
+		-- Here need to add a check that computes the hessian and performs the same loop below but only on the original system + the hessian
+		-- Then check the ideals for the correct dimension and degree in the same way.
+		I = specMap(ideal DF) + ideal Hessian(specMap(DF_0), actions);
+		if dim I == -1 then ( 
+			file1 << "No degenerate solutions" << endl;
+		) else (
+			file1 << "Degenerate solutions" << endl;
+		);
+		
+
+
+		-- check for solutions at infinity	
 		theIdeals = new List;
 		dims = new List;
 		degs = new List;

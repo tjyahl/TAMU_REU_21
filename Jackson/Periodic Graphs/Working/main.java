@@ -1,7 +1,7 @@
 import java.io.*;
 import java.lang.*;
 
-
+// designed to convert the noConeSolutions file to one suitable for jenga input
 public class main {
         public static void main(String[] args) throws IOException{
 		FileReader in = null;
@@ -31,6 +31,7 @@ public class main {
 					graphString += c;
 				}
 				graphString += c;
+				graphString = graphString.replaceAll(" ", "");
 
 				if(first){
 					first = false;
