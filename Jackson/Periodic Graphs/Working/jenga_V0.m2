@@ -351,7 +351,7 @@ for l from 0 to length startEdgeList - 1 do (
 		    );
    	 	);
 		if not added then (
-			file1 << "no solutions" << endl << endl;
+			file1 << "no solutions on cones" << endl << endl;
 		);
 	
 	);

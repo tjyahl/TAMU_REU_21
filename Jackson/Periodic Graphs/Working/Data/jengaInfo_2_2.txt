@@ -3,6 +3,7 @@ actions: 2
 results: 
 edgeList: {1, 6, 7}
 polytopeVolume: 24
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -10,6 +11,7 @@ Cones with solutions:
 
 edgeList: {4, 6, 7}
 polytopeVolume: 24
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -17,10 +19,12 @@ Cones with solutions:
 
 edgeList: {1, 4, 6, 7}
 polytopeVolume: 32
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {1, 6, 9}
 polytopeVolume: 12
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -28,6 +32,7 @@ Cones with solutions:
 
 edgeList: {4, 6, 9}
 polytopeVolume: 12
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -35,10 +40,12 @@ Cones with solutions:
 
 edgeList: {1, 4, 6, 9}
 polytopeVolume: 16
-no solutions
+Degenerate solutions
+no solutions on cones
 
 edgeList: {1, 7, 9}
 polytopeVolume: 12
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -46,6 +53,7 @@ Cones with solutions:
 
 edgeList: {4, 7, 9}
 polytopeVolume: 12
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -53,10 +61,12 @@ Cones with solutions:
 
 edgeList: {1, 4, 7, 9}
 polytopeVolume: 16
-no solutions
+Degenerate solutions
+no solutions on cones
 
 edgeList: {1, 6, 7, 9}
 polytopeVolume: 24
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -64,6 +74,7 @@ Cones with solutions:
 
 edgeList: {4, 6, 7, 9}
 polytopeVolume: 24
+Degenerate solutions
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -71,61 +82,76 @@ Cones with solutions:
 
 edgeList: {1, 4, 6, 7, 9}
 polytopeVolume: 32
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 3, 6}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 3, 7}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 6, 7}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {3, 6, 7}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 3, 6, 7}
 polytopeVolume: 32
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 6, 9}
 polytopeVolume: 12
-no solutions
+Degenerate solutions
+no solutions on cones
 
 edgeList: {3, 6, 9}
 polytopeVolume: 12
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 3, 6, 9}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 7, 9}
 polytopeVolume: 12
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {3, 7, 9}
 polytopeVolume: 12
-no solutions
+Degenerate solutions
+no solutions on cones
 
 edgeList: {2, 3, 7, 9}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 6, 7, 9}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {3, 6, 7, 9}
 polytopeVolume: 24
-no solutions
+No degenerate solutions
+no solutions on cones
 
 edgeList: {2, 3, 6, 7, 9}
 polytopeVolume: 32
-no solutions
+No degenerate solutions
+no solutions on cones
 
