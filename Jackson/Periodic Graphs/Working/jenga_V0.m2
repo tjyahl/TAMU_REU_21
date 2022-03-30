@@ -182,13 +182,20 @@ Hessian (Thing, ZZ) := (func, actions) -> (
 	for i from 1 to actions do (
 		row = new List;
 		for j from 1 to actions do (
-			row = append(row, diff(x_i, diff(x_j, func)));
+		      row = append(row, diff(x_j, diff(x_i, func)));
 		);
+		row = append(row, diff(z, diff(x_i, func)));
 		rows = append(rows, row);
 	);
-	
+	row = new List;
+	for j from 1 to actions do (
+		row = append(row, diff(x_j, func));
+	);
+	row = append(row, diff(z, func));
+	rows = append(rows, row);
 	return determinant(matrix(rows));
 )
+
 
 
 actions = 2;
@@ -216,7 +223,10 @@ Generators = new Array from take(gens DenseGraph_1, actions*2 + 2);
 Z = (ZZ/2039) Generators;
 tempIdealGenerators = first entries generators DenseGraph_2;
 
-
+inverseEqs = new List;
+for i from 1 to actions do (
+	inverseEqs = append(inverseEqs, x_i*y_i - 1);
+)
 
 
 specialization = new List;
@@ -291,12 +301,9 @@ for l from 0 to length startEdgeList - 1 do (
 
 		-- Here need to add a check that computes the hessian and performs the same loop below but only on the original system + the hessian
 		-- Then check the ideals for the correct dimension and degree in the same way.
-		I = specMap(ideal DF) + ideal Hessian(specMap(DF_0), actions);
-		if dim I == -1 then ( 
-			file1 << "No degenerate solutions" << endl;
-		) else (
-			file1 << "Degenerate solutions" << endl;
-		);
+		J = ideal inverseEqs;
+		I = specMap(ideal DF) + ideal(Hessian(specMap(DF_0), actions)) + J;
+		file1 << "dim = " << dim I << ", deg = " << degree I << endl;
 		
 
 

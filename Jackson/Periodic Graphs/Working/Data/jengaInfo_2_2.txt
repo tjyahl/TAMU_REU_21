@@ -3,7 +3,7 @@ actions: 2
 results: 
 edgeList: {1, 6, 7}
 polytopeVolume: 24
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -11,7 +11,7 @@ Cones with solutions:
 
 edgeList: {4, 6, 7}
 polytopeVolume: 24
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -19,12 +19,12 @@ Cones with solutions:
 
 edgeList: {1, 4, 6, 7}
 polytopeVolume: 32
-No degenerate solutions
+dim = -1, deg = 0
 no solutions on cones
 
 edgeList: {1, 6, 9}
 polytopeVolume: 12
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -32,7 +32,7 @@ Cones with solutions:
 
 edgeList: {4, 6, 9}
 polytopeVolume: 12
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -40,12 +40,12 @@ Cones with solutions:
 
 edgeList: {1, 4, 6, 9}
 polytopeVolume: 16
-Degenerate solutions
+dim = -1, deg = 0
 no solutions on cones
 
 edgeList: {1, 7, 9}
 polytopeVolume: 12
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -53,7 +53,7 @@ Cones with solutions:
 
 edgeList: {4, 7, 9}
 polytopeVolume: 12
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -61,12 +61,12 @@ Cones with solutions:
 
 edgeList: {1, 4, 7, 9}
 polytopeVolume: 16
-Degenerate solutions
+dim = -1, deg = 0
 no solutions on cones
 
 edgeList: {1, 6, 7, 9}
 polytopeVolume: 24
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -74,7 +74,7 @@ Cones with solutions:
 
 edgeList: {4, 6, 7, 9}
 polytopeVolume: 24
-Degenerate solutions
+dim = -1, deg = 0
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -82,76 +82,76 @@ Cones with solutions:
 
 edgeList: {1, 4, 6, 7, 9}
 polytopeVolume: 32
-No degenerate solutions
+dim = -1, deg = 0
 no solutions on cones
 
 edgeList: {2, 3, 6}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {2, 3, 7}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {2, 6, 7}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {3, 6, 7}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {2, 3, 6, 7}
 polytopeVolume: 32
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {2, 6, 9}
 polytopeVolume: 12
-Degenerate solutions
+dim = 1, deg = 2
 no solutions on cones
 
 edgeList: {3, 6, 9}
 polytopeVolume: 12
-No degenerate solutions
+dim = 1, deg = 2
 no solutions on cones
 
 edgeList: {2, 3, 6, 9}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {2, 7, 9}
 polytopeVolume: 12
-No degenerate solutions
+dim = 1, deg = 2
 no solutions on cones
 
 edgeList: {3, 7, 9}
 polytopeVolume: 12
-Degenerate solutions
+dim = 1, deg = 2
 no solutions on cones
 
 edgeList: {2, 3, 7, 9}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {2, 6, 7, 9}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {3, 6, 7, 9}
 polytopeVolume: 24
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
 edgeList: {2, 3, 6, 7, 9}
 polytopeVolume: 32
-No degenerate solutions
+dim = 1, deg = 4
 no solutions on cones
 
