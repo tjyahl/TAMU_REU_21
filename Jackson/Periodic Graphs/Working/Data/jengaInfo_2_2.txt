@@ -87,71 +87,71 @@ no solutions on cones
 
 edgeList: {2, 3, 6}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {2, 3, 7}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {2, 6, 7}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {3, 6, 7}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {2, 3, 6, 7}
 polytopeVolume: 32
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {2, 6, 9}
 polytopeVolume: 12
-dim = 1, deg = 2
+dim = 0, deg = 2
 no solutions on cones
 
 edgeList: {3, 6, 9}
 polytopeVolume: 12
-dim = 1, deg = 2
+dim = 0, deg = 2
 no solutions on cones
 
 edgeList: {2, 3, 6, 9}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {2, 7, 9}
 polytopeVolume: 12
-dim = 1, deg = 2
+dim = 0, deg = 2
 no solutions on cones
 
 edgeList: {3, 7, 9}
 polytopeVolume: 12
-dim = 1, deg = 2
+dim = 0, deg = 2
 no solutions on cones
 
 edgeList: {2, 3, 7, 9}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {2, 6, 7, 9}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {3, 6, 7, 9}
 polytopeVolume: 24
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
 edgeList: {2, 3, 6, 7, 9}
 polytopeVolume: 32
-dim = 1, deg = 4
+dim = 0, deg = 4
 no solutions on cones
 
