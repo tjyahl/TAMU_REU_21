@@ -249,9 +249,10 @@ for i from 1 to numEdges do (
 )
 
 -- reads in the contents of a file (hopefully containing just a list)
-file2 = openIn("jengaInput_2_2.txt");
+file2 = openIn("jengaInput_" | toString(fundDomain) | "_" | toString(actions) | ".txt");
 startEdgeList = value(read(file2));
 for l from 0 to length startEdgeList - 1 do (
+	print("Starting Graph: " | toString(startEdgeList_l) | " " | toString(l*100/(length startEdgeList)) | "% done");
 	numSubgraphs = 2^(length startEdgeList_l);
 	for k from 1 to numSubgraphs - 1 do (
 		-- iterates through the binary representation of the subgraph and creates the corresponding edge list
