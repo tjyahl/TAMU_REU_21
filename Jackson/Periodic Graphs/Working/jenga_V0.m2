@@ -182,13 +182,20 @@ Hessian (Thing, ZZ) := (func, actions) -> (
 	for i from 1 to actions do (
 		row = new List;
 		for j from 1 to actions do (
-			row = append(row, diff(x_i, diff(x_j, func)));
+		      row = append(row, diff(x_j, diff(x_i, func)));
 		);
+		row = append(row, diff(z, diff(x_i, func)));
 		rows = append(rows, row);
 	);
-	
+	row = new List;
+	for j from 1 to actions do (
+		row = append(row, diff(x_j, func));
+	);
+	row = append(row, diff(z, func));
+	rows = append(rows, row);
 	return determinant(matrix(rows));
 )
+
 
 
 actions = 2;
@@ -213,10 +220,16 @@ varMap = map(DenseGraph_1, DenseGraph_3);
 numEdges = numgens DenseGraph_1 - actions*2 - 2;
 
 Generators = new Array from take(gens DenseGraph_1, actions*2 + 2);
+temp = new Array from take(gens DenseGraph_1, actions*2 + 1);
 Z = (ZZ/2039) Generators;
+Zp = (ZZ/2039) temp;
+use Z;
 tempIdealGenerators = first entries generators DenseGraph_2;
 
-
+inverseEqs = new List;
+for i from 1 to actions do (
+	inverseEqs = append(inverseEqs, x_i*y_i - 1);
+)
 
 
 specialization = new List;
@@ -227,6 +240,8 @@ specialization = append(specialization, z);
 for i from 1 to actions do (
     specialization = append(specialization, y_i);
 )
+spec = append(specialization, 0);
+idealMap = map(Zp, Z);
 specialization = append(specialization, zi);
 a = new List;
 for i from 1 to numEdges do (
@@ -234,9 +249,10 @@ for i from 1 to numEdges do (
 )
 
 -- reads in the contents of a file (hopefully containing just a list)
-file2 = openIn("jengaInput_2_2.txt");
+file2 = openIn("jengaInput_" | toString(fundDomain) | "_" | toString(actions) | ".txt");
 startEdgeList = value(read(file2));
 for l from 0 to length startEdgeList - 1 do (
+	print("Starting Graph: " | toString(startEdgeList_l) | " " | toString(l*100/(length startEdgeList)) | "% done");
 	numSubgraphs = 2^(length startEdgeList_l);
 	for k from 1 to numSubgraphs - 1 do (
 		-- iterates through the binary representation of the subgraph and creates the corresponding edge list
@@ -291,13 +307,11 @@ for l from 0 to length startEdgeList - 1 do (
 
 		-- Here need to add a check that computes the hessian and performs the same loop below but only on the original system + the hessian
 		-- Then check the ideals for the correct dimension and degree in the same way.
-		I = specMap(ideal DF) + ideal Hessian(specMap(DF_0), actions);
-		if dim I == -1 then ( 
-			file1 << "No degenerate solutions" << endl;
-		) else (
-			file1 << "Degenerate solutions" << endl;
-		);
-		
+		use Zp;
+		J = idealMap(ideal inverseEqs);
+		I = idealMap(specMap(ideal DF)) + ideal(Hessian(idealMap(specMap(DF_0)), actions)) + J;
+		file1 << "dim = " << dim I << ", deg = " << degree I << endl;
+		use Z;
 
 
 		-- check for solutions at infinity	
