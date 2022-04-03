@@ -171,16 +171,15 @@ DF = denseData_4;
 
 --we specialize edges to get our poly in 3 variables
 
-a = {0,1,2,5,6,4,3,8,7,1} --pick sufficiently "random" valu
+a = {0,21,43,34,54,35,96,71,83,9} --pick sufficiently "random" values
 
-a = {0,1,2,3,4,5,6,7,8,1}
 --try the following:
 
 -- a = {0,0,43,34,0,0,96,71,0,9} --subgraph containing graphene
-a = {0,0,43,0,0,0,96,0,0,9} -- this is graphene
+-- a = {0,0,43,0,0,0,96,0,0,9} -- this is graphene
 -- a = {0,0,43,0,0,0,96,71,0,9} --a graph inbetween these two
 
--- a = {0,0,43,34,0,0,96,71,0,9} --another graph, not containing graphene but has 32 solutions might be worth checking subgraphs
+a = {0,0,1,3,0,0,1,1,0,0} --another graph, not containing graphene but has 32 solutions might be worth checking subgraphs
 
 
 specmap = map(denseData_3, denseData_1, {x_1,x_2,y_1,y_2,z,a_1,a_2,a_3,a_4,a_5,a_6,a_7,a_8,a_9})
@@ -227,172 +226,107 @@ sysDF = apply(DFs, n -> apply(conelistDF, m-> getFaceFunc(m,n,1))); --the 1 is j
 	 );
 degs
 dims
-
+theideals_5
+theideals_0
+theideals_7
 --For degrees these should be all zero except 1 at the 5th entry and a nonzero value at the 14th entry
 --for dims it should be -1 where there are 0s, 1 where there is a 1, and 2 at the 14th entry
 
 --If this is the case then we have no solutions at any relevant facial system and so we know the number of isolated solutions is given by the mixed volume
 
 --A glimpse as to why we don't need to worry about the 5th or 14th entry is the following
-
-conelistDF_4
+conelistDF
+conelistDF_3
+conelistDF_7
 conelistDF_13 -- take the sum of the the columns to get the vector in question
 
 --These two vectors correspond to the base and peak of the polytope (when the height is taken to correspond to the z or "lambda" axis)
 --We can later go over why solutions at the peak are not solutions at all (because lambda cannot be zero here)
 --Our criteria also actually accounts for these solutions on the base, these are part of the mixedvolume number of solutions
-Hessian = method()
-Hessian (Thing, ZZ) := (func, actions) -> (
-	rows = new List;
-	for i from 1 to actions do (
-		row = new List;
-		for j from 1 to actions do (
-			row = append(row, diff(x_j, diff(x_i, func)));
-		);
-	    	row = append(row, diff(z, diff(x_i, func)));
-		rows = append(rows, row);
-	);
-    	row = new List;
-	       for j from 1 to actions do (
-			row = append(row, diff(x_j, func));
-		);
-	   row = append(row, diff(z, func));
-	   rows = append(rows, row);
-	return determinant(matrix(rows));
-)
-
-jacc = Hessian(DFs_0,2)
-
-Idd = ideal(DFs) + ideal(jacc) + ideal(x_1*y_1-1, x_2*y_2-1)
-
-dim Idd
-degree Idd
-
-eliminate(Idd,{x_1,y_1,x_2,y_2})
 
 
 
+--Have not been makign it so lambda is nonzero on faces at infinity, many facial solutions could be false positives.
 
 
+--Mixedvolume and counting the number of solutions
+clearAll
+load "functions.m2"
+denseData = AdjacentDensePeriodicMatrixInvL(2,2); --returns matrix, ring with arbitrary edges, ideal identifying variables, and ring in same vars without edge variables, and system in ring with edges
 
-a = {0,0,43,0,0,0,96,0,0,9} -- this is graphene
+DF = denseData_4;    
 
-a = {0,2,2,1,2,2,1,1,1,1} -- Interesting example, 5 singulars at (z-14)^2
+--we specialize edges to get our poly in 3 variables
 
-a = {0,2,2,1,2,2,1,1,1,3} -- no solutions
+a = {0,21,43,34,54,35,96,71,83,9} --pick sufficiently "random" values
 
-a = {0,2,2,1,2,2,1,1,1,2} -- 2 solutions
+--try the following:
 
-a = {0,1,2,1,1,2,1,1,1,1} -- 5 solutions at (z-10)^2
+-- a = {0,0,43,34,0,0,96,71,0,9} --subgraph containing graphene
+-- a = {0,0,43,0,0,0,96,0,0,9} -- this is graphene
+-- a = {0,0,43,0,0,0,96,71,0,9} --a graph inbetween these two
 
-a = {0,1,2,1,1,2,1,1,1,0} -- 6 solutions at (z-7)(z-8) (two locations this time)
-
-a = {0,2,2,1,2,2,1,1,1,0} -- 4 solutions
-
-a = {0,1,2,1,1,2,1,2,1,0} -- 7 solutions at (z-10)^2
-
-a = {0,1,2,1,1,2,1,1,2,0} -- 8 solutions at z=7,8,14,15
-
-a = {0,1,2,1,1,2,1,1,2,5} -- 7 solutions at z=22,30
-
-a = {0,1,2,1,1,2,1,1,2,3} -- 4 solutions
-
-a = {0,2,2,1,2,2,1,1,2,4} -- 4 solutions at z=16,24
-
-a = {0,1,2,1,2,2,1,1,2,6} -- 2 solutions at z=33
-
-a = {0,1,3,1,3,3,1,1,3,6} -- 2 solutions at z=48
-a = {0,1,3,1,1,3,1,1,3,6} -- 7 solutions at z=28,48
-a = {0,1,3,1,1,2,1,1,2,6} -- 7 solutions at z=24,36
-a = {0,1,3,1,1,1,2,2,1,6} -- 6 solutions at z=20,21
-a = {0,1,3,2,1,1,3,2,1,6} -- 2 solutions at z=112/5
+a = {0,1,0,0,1,1,0,0,1,0} --another graph, not containing graphene but has 32 solutions might be worth checking subgraphs
 
 
-a = {0,1,2,3,1,1,2,2,1,0} -- 4 solutions at z=25/2,27/2
-a = {0,1,2,3,1,1,2,2,1,1} -- 7 solutions at z=14,15
-a = {0,1,2,3,1,1,2,2,1,2} -- 8 solutions at z=31/2,17,33/2
-a = {0,1,2,3,1,1,2,2,1,3} -- 4 solutions at z=17, 18
-a = {0,1,2,3,1,1,2,2,1,4} -- 4 solutions at z=37/2, 39/2
-a = {0,1,2,3,1,1,2,2,1,5} -- 4 solutions at z=20,21
-a = {0,1,2,3,1,1,2,2,1,6} -- 8 solutions at z=21,43/2,45/2
-a = {0,1,2,3,1,1,2,2,1,7} -- 4 solutions at z=23,24
-a = {0,1,2,3,1,1,2,2,1,8} -- 4 solutions at z=49/2, 51/2
-a = {0,1,2,3,1,1,2,2,1,9} -- 4 solutions at z=26,27
-a = {0,1,2,3,1,1,2,2,1,10} -- 4 solutions at z=55/2,57/2
-a = {0,1,2,3,1,1,2,2,1,11} -- 4 solutions at z=29, 30
-a = {0,1,2,3,1,1,2,2,1,12} -- 4 solutions at z=61/2,63/2
-a = {0,1,2,3,1,1,2,2,1,13} -- 4 solutions at z=32,33
-a = {0,1,2,3,1,1,2,2,1,14} -- 4 solutions at z=67/2, 69/2
-a = {0,1,2,3,1,1,2,2,1,15} -- 4 solutions at z=35,36
-a = {0,1,2,3,1,1,2,2,1,16} -- 4 solutions at z=61/2,63/2
---...
-a = {0,1,2,3,1,1,2,2,1,200} -- 4 solutions at z=627/2,625/2
+specmap = map(denseData_3, denseData_1, {x_1,x_2,z,y_1,y_2,zi,a_1,a_2,a_3,a_4,a_5,a_6,a_7,a_8,a_9})
 
+toprunelist = {}; --This list will be taken as a parameter in order to get a m+1 dimensional polytope
+m=2 --this is the number of variables not including z
+for i from 1 to m+1 do (
+    toprunelist = append(toprunelist, 2*m+2-i);
+    );
 
-
-a = {0,1,2,3,1,1,2,3,1,0} -- 4 solutions at z=14 degree 1
-a = {0,1,2,3,1,1,2,3,1,1} -- 2 solutions at z=77/5
-a = {0,1,2,3,1,1,2,3,1,2} -- 2 solutions at z=84/5
-a = {0,1,2,3,1,1,2,3,1,3} -- 2 solutions at z=91/5
-a = {0,1,2,3,1,1,2,3,1,4} -- 2 solutions at z=98/5
-a = {0,1,2,3,1,1,2,3,1,5} -- 2 solutions at z=21
-a = {0,1,2,3,1,1,2,3,1,6} -- 2 solutions at z=112/5
-a = {0,1,2,3,1,1,2,3,1,7} -- 2 solutions at z=119/5
-
-a = {0,1,3,4,1,1,3,4,1,0} -- 4 solutions at z=18 degree 1
-a = {0,1,3,4,1,1,3,4,1,1} -- 2 solutions at z=135/7 
-a = {0,1,3,4,1,1,3,4,1,2} -- 2 solutions at z=144/7
-a = {0,1,3,4,1,1,3,4,1,3} -- 2 solutions at z=153/7 
-a = {0,1,3,4,1,1,3,4,1,4} -- 2 solutions at z=162/7 
-
-a = {0,1,3,2,4,1,4,5,8,0}
-
-specmap = map(denseData_3, denseData_1, {x_1,x_2,y_1,y_2,z,a_1,a_2,a_3,a_4,a_5,a_6,a_7,a_8,a_9})
 DFs = apply(DF, n -> specmap (n)); --puts system in ring without edge variables
-jacc = Hessian(DFs_0,2)
-Idd = ideal(DFs) + ideal(jacc) + ideal(x_1*y_1-1, x_2*y_2-1)
-dim Idd
-degree Idd
-elpoly = eliminate(Idd,{x_1,y_1,x_2,y_2})
-factor(elpoly_0)
-specmapp = map(denseData_3, denseData_3, {1,1,1,1,28})
---specmapp = map(denseData_3, denseData_3, {x_1,x_2,y_1,y_2,135/7})
-funci = diff(z,DFs_0)
-funci1 = diff(z,DFs_1)
-funci2 = diff(z,DFs_2)
-specmapp funci
-specmapp funci1
-specmapp funci2
-specmapp DFs_0
-specmapp DFs_1
-specmapp DFs_2
 
-funcix = diff(x_1,DFs_0)
-funci1x = diff(x_1,DFs_1)
-funci2x = diff(x_1,DFs_2)
-specmapp funcix
-specmapp funci1x
-specmapp funci2x
+DFsP = apply(DFs, n -> pruneList ( exponents(n ) , toprunelist)); --prunes/purges out the dimensions containing the inverse variables
 
-funciy = diff(x_2,DFs_0)
-specmapp funciy
-funci1y = diff(x_2,DFs_1)
-specmapp funci1y
-funci2y = diff(x_2,DFs_2)
-specmapp funci2y
+DFsN = apply(DFsP, n -> convexHull (transpose matrix n)); --list of polytopes
 
-elpoly = eliminate(Idd,{z})
-factor(elpoly_0)
+mixedV = myMixedVolume(DFsN) --returns the mixed volume, if out system is sufficiently generic, Bernstein's theorem tells us the number of solutions = mixed volume, in general the number of isolated solution in the algebraic torus is <= mixed volume
 
-a = {0,1,e_2,e_3,1,1,e_2,e_3,1,1} -- 2 solutions at z=16 
-use denseData_1
-specmap = map(denseData_1, denseData_1, {x_1,x_2,y_1,y_2,z,a_1,a_2,a_3,a_4,a_5,a_6,a_7,a_8,a_9})
-DFs = apply(DF, n -> specmap (n)); --puts system in ring without edge variables
-jacc = Hessian(DFs_0,2)
-Idd = ideal(DFs) + ideal(jacc) + ideal(x_1*y_1-1, x_2*y_2-1)
-dim Idd
-degree Idd
-elpoly = eliminate(Idd,{x_1,y_1,x_2,y_2,e_1,e_4,e_5,e_6,e_7,e_9})
-factor(elpoly_0)
-a
+volume DFsN_0 -- Notice MV is 3! * the volume of the polytope of the characteristic polynomial, for our systems this is always true (where 3 is n instead where n is the dimension of the polytope of DF_0).
 
+--Our polynomials are not generic, but we have a criteria to check when the mixed volume is the number of solutions, this is when the "facial systems have no solutions"
+--probably do not have time to discuss these very clearly today, so for the sake of enabling you to play with this I will describe what to look for
+
+--We will generate cones of the polytope, and these cones will identify difference facial systems
+
+DFan = normalFan DFsN_0;
+conelistDF = coneList(DFan);
+sysDF = apply(DFs, n -> apply(conelistDF, m-> getFaceFunc(m,n,0))); --the 1 is now a zero since lambda also is Laurant now.
+--this gives us a collection of all facial systems
+
+
+--we extract some information about these systems:
+     theideals = {};
+     dims = {};
+     degs = {};
+     for i from 0 to #conelistDF - 1 do (
+	 thelist = {};
+	 for j from 0 to m do (
+	     thelist = append(thelist, (sysDF_j)_i);
+	     );
+	 theideals = append(theideals,(ideal thelist)+(specmap denseData_2));
+	 dims = append(dims, dim theideals_i);
+	 degs = append(degs, degree theideals_i);
+	 );
+degs
+dims
+theideals_5
+theideals_0
+theideals_7
+--For degrees these should be all zero except 1 at the 5th entry and a nonzero value at the 14th entry
+--for dims it should be -1 where there are 0s, 1 where there is a 1, and 2 at the 14th entry
+
+--If this is the case then we have no solutions at any relevant facial system and so we know the number of isolated solutions is given by the mixed volume
+
+--A glimpse as to why we don't need to worry about the 5th or 14th entry is the following
+conelistDF
+conelistDF_3
+conelistDF_7
+conelistDF_13 -- take the sum of the the columns to get the vector in question
+
+--These two vectors correspond to the base and peak of the polytope (when the height is taken to correspond to the z or "lambda" axis)
+--We can later go over why solutions at the peak are not solutions at all (because lambda cannot be zero here)
+--Our criteria also actually accounts for these solutions on the base, these are part of the mixedvolume number of solutions
