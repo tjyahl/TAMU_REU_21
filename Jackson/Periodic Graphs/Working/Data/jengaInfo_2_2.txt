@@ -1,9 +1,14 @@
 vertices: 2
 actions: 2
 results: 
+            ZZ
+Using ring ----[x ..x , z, y ..y , zi, Degrees => {6:1}, Heft => {1}, MonomialOrder => {MonomialSize => 32}, DegreeRank => 1]
+           2039  1   2      1   2                                                      {GRevLex => {6:1}  }
+                                                                                       {Position => Up    }
 edgeList: {1, 6, 7}
 polytopeVolume: 24
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -12,6 +17,7 @@ Cones with solutions:
 edgeList: {4, 6, 7}
 polytopeVolume: 24
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -20,11 +26,13 @@ Cones with solutions:
 edgeList: {1, 4, 6, 7}
 polytopeVolume: 32
 dim = -1, deg = 0
+lambda values = 1
 no solutions on cones
 
 edgeList: {1, 6, 9}
 polytopeVolume: 12
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -33,6 +41,7 @@ Cones with solutions:
 edgeList: {4, 6, 9}
 polytopeVolume: 12
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -41,11 +50,13 @@ Cones with solutions:
 edgeList: {1, 4, 6, 9}
 polytopeVolume: 16
 dim = -1, deg = 0
+lambda values = 1
 no solutions on cones
 
 edgeList: {1, 7, 9}
 polytopeVolume: 12
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -54,6 +65,7 @@ Cones with solutions:
 edgeList: {4, 7, 9}
 polytopeVolume: 12
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -1 -1 |, | 1  1 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -62,11 +74,13 @@ Cones with solutions:
 edgeList: {1, 4, 7, 9}
 polytopeVolume: 16
 dim = -1, deg = 0
+lambda values = 1
 no solutions on cones
 
 edgeList: {1, 6, 7, 9}
 polytopeVolume: 24
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -75,6 +89,7 @@ Cones with solutions:
 edgeList: {4, 6, 7, 9}
 polytopeVolume: 24
 dim = -1, deg = 0
+lambda values = 1
 Cones with solutions: 
 {| 0 |, | -2 -2 |, | 2  2 |}
  | 0 |  | -1 1  |  | -1 1 |
@@ -83,75 +98,90 @@ Cones with solutions:
 edgeList: {1, 4, 6, 7, 9}
 polytopeVolume: 32
 dim = -1, deg = 0
+lambda values = 1
 no solutions on cones
 
 edgeList: {2, 3, 6}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z - 231)
 no solutions on cones
 
 edgeList: {2, 3, 7}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z + 826)
 no solutions on cones
 
 edgeList: {2, 6, 7}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z + 262)
 no solutions on cones
 
 edgeList: {3, 6, 7}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z + 68)
 no solutions on cones
 
 edgeList: {2, 3, 6, 7}
 polytopeVolume: 32
 dim = 0, deg = 4
+lambda values = (z + 988)
 no solutions on cones
 
 edgeList: {2, 6, 9}
 polytopeVolume: 12
 dim = 0, deg = 2
+lambda values = (z - 363)
 no solutions on cones
 
 edgeList: {3, 6, 9}
 polytopeVolume: 12
 dim = 0, deg = 2
+lambda values = (z - 557)
 no solutions on cones
 
 edgeList: {2, 3, 6, 9}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z + 363)
 no solutions on cones
 
 edgeList: {2, 7, 9}
 polytopeVolume: 12
 dim = 0, deg = 2
+lambda values = (z + 694)
 no solutions on cones
 
 edgeList: {3, 7, 9}
 polytopeVolume: 12
 dim = 0, deg = 2
+lambda values = (z + 500)
 no solutions on cones
 
 edgeList: {2, 3, 7, 9}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z - 619)
 no solutions on cones
 
 edgeList: {2, 6, 7, 9}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z + 856)
 no solutions on cones
 
 edgeList: {3, 6, 7, 9}
 polytopeVolume: 24
 dim = 0, deg = 4
+lambda values = (z + 662)
 no solutions on cones
 
 edgeList: {2, 3, 6, 7, 9}
 polytopeVolume: 32
 dim = 0, deg = 4
+lambda values = (z - 457)
 no solutions on cones
 

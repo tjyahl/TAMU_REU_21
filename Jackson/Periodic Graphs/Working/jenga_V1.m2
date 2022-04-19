@@ -199,7 +199,7 @@ Hessian (Thing, ZZ) := (func, actions) -> (
 
 
 actions = 2;
-fundDomain = 4;
+fundDomain = 2;
 
 -- setting up output files
 outputString = "Data/jengaInfo_" | toString(fundDomain) | "_" | toString(actions) | ".txt";
@@ -225,10 +225,17 @@ Z = (ZZ/2039) Generators;
 Zp = (ZZ/2039) temp;
 use Z;
 tempIdealGenerators = first entries generators DenseGraph_2;
+file1 << "Using ring " << describe Z << endl;
 
 inverseEqs = new List;
 for i from 1 to actions do (
 	inverseEqs = append(inverseEqs, x_i*y_i - 1);
+)
+
+nonLambdaVars = new List;
+for i from 1 to actions do (
+	nonLambdaVars = append(nonLambdaVars, x_i);
+	nonLambdaVars = append(nonLambdaVars, y_i);
 )
 
 
@@ -311,6 +318,8 @@ for l from 0 to length startEdgeList - 1 do (
 		J = idealMap(ideal inverseEqs);
 		I = idealMap(specMap(ideal DF)) + ideal(Hessian(idealMap(specMap(DF_0)), actions)) + J;
 		file1 << "dim = " << dim I << ", deg = " << degree I << endl;
+		elpoly = eliminate(I, apply(nonLambdaVars, n -> idealMap(n)));
+		file1 << "lambda values = " << factor(elpoly_0) << endl;
 		use Z;
 
 
