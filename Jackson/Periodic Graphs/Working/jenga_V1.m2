@@ -305,6 +305,7 @@ for l from 0 to length startEdgeList - 1 do (
 		);
 
 		file1 << "edgeList: " << edgeList << endl;
+		file1 << "edgeWeights: " << currentSpecialization << endl;
 		file1 << "polytopeVolume: " << recordedVolume << endl;
 		-- get the corresponding faces
 		DFan = normalFan DFsN_0;

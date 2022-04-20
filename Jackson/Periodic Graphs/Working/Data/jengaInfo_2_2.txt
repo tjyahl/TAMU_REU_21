@@ -6,6 +6,7 @@ Using ring ----[x ..x , z, y ..y , zi, Degrees => {6:1}, Heft => {1}, MonomialOr
            2039  1   2      1   2                                                      {GRevLex => {6:1}  }
                                                                                        {Position => Up    }
 edgeList: {1, 6, 7}
+edgeWeights: {403, 0, 0, 0, 0, 1990, 2007, 0, 0}
 polytopeVolume: 24
 dim = -1, deg = 0
 lambda values = 1
@@ -15,6 +16,7 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {4, 6, 7}
+edgeWeights: {0, 0, 0, 1423, 0, 1990, 2007, 0, 0}
 polytopeVolume: 24
 dim = -1, deg = 0
 lambda values = 1
@@ -24,12 +26,14 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {1, 4, 6, 7}
+edgeWeights: {403, 0, 0, 1423, 0, 1990, 2007, 0, 0}
 polytopeVolume: 32
 dim = -1, deg = 0
 lambda values = 1
 no solutions on cones
 
 edgeList: {1, 6, 9}
+edgeWeights: {403, 0, 0, 0, 0, 1990, 0, 0, 358}
 polytopeVolume: 12
 dim = -1, deg = 0
 lambda values = 1
@@ -39,6 +43,7 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {4, 6, 9}
+edgeWeights: {0, 0, 0, 1423, 0, 1990, 0, 0, 358}
 polytopeVolume: 12
 dim = -1, deg = 0
 lambda values = 1
@@ -48,12 +53,14 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {1, 4, 6, 9}
+edgeWeights: {403, 0, 0, 1423, 0, 1990, 0, 0, 358}
 polytopeVolume: 16
 dim = -1, deg = 0
 lambda values = 1
 no solutions on cones
 
 edgeList: {1, 7, 9}
+edgeWeights: {403, 0, 0, 0, 0, 0, 2007, 0, 358}
 polytopeVolume: 12
 dim = -1, deg = 0
 lambda values = 1
@@ -63,6 +70,7 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {4, 7, 9}
+edgeWeights: {0, 0, 0, 1423, 0, 0, 2007, 0, 358}
 polytopeVolume: 12
 dim = -1, deg = 0
 lambda values = 1
@@ -72,12 +80,14 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {1, 4, 7, 9}
+edgeWeights: {403, 0, 0, 1423, 0, 0, 2007, 0, 358}
 polytopeVolume: 16
 dim = -1, deg = 0
 lambda values = 1
 no solutions on cones
 
 edgeList: {1, 6, 7, 9}
+edgeWeights: {403, 0, 0, 0, 0, 1990, 2007, 0, 358}
 polytopeVolume: 24
 dim = -1, deg = 0
 lambda values = 1
@@ -87,6 +97,7 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {4, 6, 7, 9}
+edgeWeights: {0, 0, 0, 1423, 0, 1990, 2007, 0, 358}
 polytopeVolume: 24
 dim = -1, deg = 0
 lambda values = 1
@@ -96,92 +107,107 @@ Cones with solutions:
  | 1 |  | 0  0  |  | 0  0 |
 
 edgeList: {1, 4, 6, 7, 9}
+edgeWeights: {403, 0, 0, 1423, 0, 1990, 2007, 0, 358}
 polytopeVolume: 32
 dim = -1, deg = 0
 lambda values = 1
 no solutions on cones
 
 edgeList: {2, 3, 6}
+edgeWeights: {0, 1817, 683, 0, 0, 1990, 0, 0, 0}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z - 231)
+lambda values = (z - 412)
 no solutions on cones
 
 edgeList: {2, 3, 7}
+edgeWeights: {0, 1817, 683, 0, 0, 0, 2007, 0, 0}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z + 826)
+lambda values = (z - 429)
 no solutions on cones
 
 edgeList: {2, 6, 7}
+edgeWeights: {0, 1817, 0, 0, 0, 1990, 2007, 0, 0}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z + 262)
+lambda values = (z + 303)
 no solutions on cones
 
 edgeList: {3, 6, 7}
+edgeWeights: {0, 0, 683, 0, 0, 1990, 2007, 0, 0}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z + 68)
+lambda values = (z - 602)
 no solutions on cones
 
 edgeList: {2, 3, 6, 7}
+edgeWeights: {0, 1817, 683, 0, 0, 1990, 2007, 0, 0}
 polytopeVolume: 32
 dim = 0, deg = 4
-lambda values = (z + 988)
+lambda values = (z - 380)
 no solutions on cones
 
 edgeList: {2, 6, 9}
+edgeWeights: {0, 1817, 0, 0, 0, 1990, 0, 0, 358}
 polytopeVolume: 12
 dim = 0, deg = 2
-lambda values = (z - 363)
+lambda values = (z - 87)
 no solutions on cones
 
 edgeList: {3, 6, 9}
+edgeWeights: {0, 0, 683, 0, 0, 1990, 0, 0, 358}
 polytopeVolume: 12
 dim = 0, deg = 2
-lambda values = (z - 557)
+lambda values = (z - 992)
 no solutions on cones
 
 edgeList: {2, 3, 6, 9}
+edgeWeights: {0, 1817, 683, 0, 0, 1990, 0, 0, 358}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z + 363)
+lambda values = (z - 770)
 no solutions on cones
 
 edgeList: {2, 7, 9}
+edgeWeights: {0, 1817, 0, 0, 0, 0, 2007, 0, 358}
 polytopeVolume: 12
 dim = 0, deg = 2
-lambda values = (z + 694)
+lambda values = (z - 104)
 no solutions on cones
 
 edgeList: {3, 7, 9}
+edgeWeights: {0, 0, 683, 0, 0, 0, 2007, 0, 358}
 polytopeVolume: 12
 dim = 0, deg = 2
-lambda values = (z + 500)
+lambda values = (z - 1009)
 no solutions on cones
 
 edgeList: {2, 3, 7, 9}
+edgeWeights: {0, 1817, 683, 0, 0, 0, 2007, 0, 358}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z - 619)
+lambda values = (z - 787)
 no solutions on cones
 
 edgeList: {2, 6, 7, 9}
+edgeWeights: {0, 1817, 0, 0, 0, 1990, 2007, 0, 358}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z + 856)
+lambda values = (z - 55)
 no solutions on cones
 
 edgeList: {3, 6, 7, 9}
+edgeWeights: {0, 0, 683, 0, 0, 1990, 2007, 0, 358}
 polytopeVolume: 24
 dim = 0, deg = 4
-lambda values = (z + 662)
+lambda values = (z - 960)
 no solutions on cones
 
 edgeList: {2, 3, 6, 7, 9}
+edgeWeights: {0, 1817, 683, 0, 0, 1990, 2007, 0, 358}
 polytopeVolume: 32
 dim = 0, deg = 4
-lambda values = (z - 457)
+lambda values = (z - 738)
 no solutions on cones
 
